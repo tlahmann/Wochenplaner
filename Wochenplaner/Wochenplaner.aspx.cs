@@ -20,10 +20,21 @@ namespace Wochenplaner {
                                        und fügt, falls zutrefend, noch das datum hinzu*/ {
                 paintDate(getWeeknumber(DateTime.Now), DateTime.Now.Year);
             }
-            //disableButtonsOnPageLoad();
+            disableButtonsOnPageLoad();
+            createRandomUser();
         }
 
         #region Design
+
+        private void createRandomUser(){
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var random = new Random();
+            var result = new string(
+                Enumerable.Repeat(chars, 6)
+                          .Select(s => s[random.Next(s.Length)])
+                          .ToArray());
+            userData.Text = result;
+        }
 
         /// <summary>
         /// Displays the week number of the given time.</summary>

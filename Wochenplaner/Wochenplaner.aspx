@@ -430,23 +430,26 @@
 
         <div id="overlay-appointment-wrapper">
             <div class="overlay-appointment">
-                <h2>Termin erstellen:</h2>
+                <h2>Terminbearbeitung:</h2>
                 <h3>
                     <asp:Label ID="overlayChoosenDate" runat="server" Text=""></asp:Label></h3>
                 <asp:Table ID="table" runat="server">
                     <asp:TableRow runat="server">
                         <asp:TableCell runat="server"><div class="overlay-appointment-label">Titel: </div></asp:TableCell>
                         <asp:TableCell runat="server">
-                            <asp:TextBox ID="overlayTextBoxSmall" runat="server"></asp:TextBox></asp:TableCell>
+                            <asp:TextBox ID="overlayTextBoxSmall" runat="server"></asp:TextBox>
+                        </asp:TableCell>
                     </asp:TableRow>
                     <asp:TableRow runat="server">
                         <asp:TableCell runat="server"><div class="overlay-appointment-label">Beschreibung: </div></asp:TableCell>
                         <asp:TableCell runat="server">
-                            <asp:TextBox ID="overlayTextBoxLarge" TextMode="multiline" Rows="8" runat="server"></asp:TextBox></asp:TableCell>
+                            <asp:TextBox ID="overlayTextBoxLarge" TextMode="multiline" Rows="8" runat="server"></asp:TextBox>
+                        </asp:TableCell>
                     </asp:TableRow>
                     <asp:TableRow runat="server">
                         <asp:TableCell runat="server">
-                            <asp:CheckBox ID="cbRepeat" CssClass="overlay-appointment-check-box-repeating" runat="server" Text="Wiederholen" /></asp:TableCell>
+                            <asp:CheckBox ID="cbRepeat" CssClass="overlay-appointment-check-box-repeating" runat="server" Text="Wiederholen" />
+                        </asp:TableCell>
                         <asp:TableCell runat="server">
                             <asp:DropDownList ID="ddRepeat" CssClass="overlay-dateTime-dropDown" runat="server">
                                 <asp:ListItem Value="01">Täglich</asp:ListItem>
@@ -460,7 +463,8 @@
                     </asp:TableRow>
                     <asp:TableRow runat="server">
                         <asp:TableCell runat="server">
-                            <asp:CheckBox ID="cbEnd" CssClass="overlay-appointment-check-box-repeating" runat="server" Text="Endet" /></asp:TableCell>
+                            <asp:CheckBox ID="cbEnd" CssClass="overlay-appointment-check-box-repeating" runat="server" Text="Endet" />
+                        </asp:TableCell>
                         <asp:TableCell runat="server">
                             <div id="overlay-appointment-date-wrapper">
                                 <div class="overlay-appointment-upDown-wrapper-left">
