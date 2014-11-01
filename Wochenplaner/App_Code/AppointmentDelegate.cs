@@ -4,16 +4,16 @@ using System.Linq;
 using System.Web;
 using System.Media;
 
-// Declare the delegate handler for the event. The delegate
-// defines a signature that returns void and has no parameters.
-public delegate void AppointmentCreateEventHandler();
+namespace Wochenplaner.App_Code {
+    // Declare the delegate handler for the event. The delegate
+    // defines a signature that returns void and has no parameters.
+    public delegate void AppointmentCreateEventHandler();
 
-namespace Wochenplaner {
     /// <summary>
     /// Zusammenfassungsbeschreibung für AppointmentDelegate
     /// </summary>
     public class AppointmentDelegate {
-        // Declare the event of type MyEventHandler. Event handlers
+        // Declare the event of type AppointmentCreateEventHandler. Event handlers
         // for TriggerIt must have the same signature as MyEventHandler.
         public event AppointmentCreateEventHandler TriggerIt;
 

@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Data.SqlClient;
+using Wochenplaner.App_Code;
 
 namespace Wochenplaner {
     public partial class Wochenplaner : System.Web.UI.Page {
@@ -266,7 +267,7 @@ namespace Wochenplaner {
         /// <param name="sender">object sender</param>
         /// <param name="e">event e</param>
         protected void createAppointment(object sender, EventArgs e) {
-            SqlConnection sqlConnection = new SqlConnection(@"Data Source=(LocalDB)\v11.0;AttachDbFilename=D:\Benutzer\Tobias\Dokumente\Programming\WebSites\Wochenplaner\App_Data\termDB.mdf;Integrated Security=True");
+            SqlConnection sqlConnection = new SqlConnection(@"Data Source=(LocalDB)\v11.0;AttachDbFilename=D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\App_Data\WP_DataBase.mdf;Integrated Security=True");
             try {
                 sqlConnection.Open();
                 sqlWrite(sqlConnection);
@@ -308,7 +309,7 @@ namespace Wochenplaner {
 
                 DateTime startDate = getDateFromWeekday(getWeeknumber(), getYearnumber(), day);
 
-                SqlCommand command = new SqlCommand("INSERT INTO appointment VALUES (@USER, @TITLE, @DESC, @STARTDATE, @TIME, @ENDDATE, @REPEAT)", sqlCon);
+                SqlCommand command = new SqlCommand("INSERT INTO appointments VALUES (@USER, @TITLE, @DESC, @STARTDATE, @TIME, @ENDDATE, @REPEAT)", sqlCon);
                 command.Parameters.AddWithValue("@USER", user);
                 command.Parameters.AddWithValue("@TITLE", title);
                 command.Parameters.AddWithValue("@DESC", desc);
@@ -324,9 +325,9 @@ namespace Wochenplaner {
 
                 command.ExecuteNonQuery();
             } catch (Exception ex) {
-                //AppointmentDelegate ad = new AppointmentDelegate();
-                //ad.TriggerIt += new AppointmentCreateEventHandler(ad.displayAppointment);
-                //ad.Trigger();
+                AppointmentDelegate ad = new AppointmentDelegate();
+                ad.TriggerIt += new AppointmentCreateEventHandler(ad.displayAppointment);
+                ad.Trigger();
             }
         }
 
