@@ -1,0 +1,6 @@
+D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\bin\Wochenplaner.dll.config
+D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\bin\Wochenplaner.dll
+D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\bin\Wochenplaner.pdb
+D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\obj\Debug\Wochenplaner.csprojResolveAssemblyReference.cache
+D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\obj\Debug\Wochenplaner.dll
+D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\obj\Debug\Wochenplaner.pdb
