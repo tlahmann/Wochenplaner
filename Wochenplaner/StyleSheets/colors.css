@@ -1,0 +1,84 @@
+﻿/*------------------------------------------------------------------
+[Color Stylesheet]
+
+Project:	Wochenplaner
+Version:	1.2
+Last change:	29/10/'14 [login overlay added]
+Assigned to:	Tobias Lahmann
+Primary use:	MainPage
+-------------------------------------------------------------------*/
+/*------------------------------------------------------------------
+# [Color codes]
+     [[ SEE "Wochenplaner-colors.png" FOR REFERENCE ]]
+# none      - transparent
+# #FFF      - white
+# #F5FAFA   - pale beige | background table alt
+# #E7F2F3   - pale blue | background table head collumn
+# #E5EBEE   - very light blue | background body, header
+# #CAE8EA   - light blue | border buttons, background table head
+# #819FAF   - blue | border table
+# #6D929B   - dark blue | alternate text color
+# #000      - black | text
+-------------------------------------------------------------------*/
+/*------------------------------------------------------------------
+[Table of contents]
+
+[Main Page]
+1. Background
+2. Font Color
+3. Border Color
+-------------------------------------------------------------------*/
+
+/*=== 1. Background ===*/
+
+BODY, #header, .overlay-appointment, .overlay-dateTime, .overlay-login {
+    background:     #E5EBEE;
+}
+
+#form, .login-button, .navgation-button, .overlay-button, 
+#overlay-appointment-check-box-repeating, #overlay-dateTime-dropDown {
+    background:     #FFF;
+}
+
+.no-background, .head-button, .content, .appointment-button {
+    background:     none;
+}
+
+.content-alternating {
+    background:     #F5FAFA;
+}
+
+.with-background, .special-head-alternating {
+    background:     #CAE8EA;
+}
+
+.special-head{
+    background:     #E7F2F3;
+}
+
+#overlay-appointment-wrapper, #overlay-dateTime-wrapper, #overlay-login-wrapper {
+    background:     rgba(0, 0, 0, 0.25);
+}
+
+/*=== 2. Font Color ===*/
+
+BODY, H1, H2, H3, H4, H5, H6, .content, .content-alternating {
+    color:          #000;
+}
+
+.login-button, .navgation-button, .overlay-button, .appointment-button, .head-button, #table-planner,
+.special-head, .special-head-alternating, .overlay-appointment, #overlayTextBoxSmall, 
+#overlayTextBoxLarge, #overlayTextBoxLogin, .overlay-dateTime, .overlay-login {
+    color:          #6D929B;
+}
+
+/*=== 3. Border Color ===*/
+
+.login-button, .navgation-button, .overlay-button, #overlay-appointment-check-box-repeating, #overlay-dateTime-dropDown {
+    border-color:   #CAE8EA;
+}
+
+.no-background, .with-background, .special-head, .special-head-alternating, .content, .content-alternating, #overlayTextBoxTitle, 
+#overlayTextBoxDescription {
+    border-color:   #819FAF;
+}

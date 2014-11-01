@@ -1,0 +1,275 @@
+﻿/*------------------------------------------------------------------
+[Overlay Stylesheet]
+
+Project:	Wochenplaner
+Version:	1.3
+Last change:	29/10/'14 [appointment creation redone]
+Assigned to:	Tobias Lahmann
+Primary use:	MainPage
+-------------------------------------------------------------------*/
+/*------------------------------------------------------------------
+[Table of contents]
+
+1. [comprehensive]
+2. Overlay Appointment
+    2.1. Input
+    2.2. Selection
+3. Overlay DateTime
+    3.1. Selection
+4. Overlay Login
+    4.1. Selection
+-------------------------------------------------------------------*/
+
+/*=== 1. [comprehensive] ===*/
+
+.overlay-button {
+    font-weight: bold;
+    font-size: 12px;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 1px;
+    margin: 5px 10px 5px 10px;
+    height: 25px;
+    width: 110px;
+}
+
+/*=== 2. Overlay Appointment ===*/
+
+#overlay-appointment-wrapper {
+    display: none;
+    position: absolute;
+    text-transform: uppercase;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+}
+
+.overlay-appointment {
+    font-weight: bold;
+    font-size: 12px;
+    border-style: solid;
+    border-width: 5px;
+    padding: 10px;
+    position: absolute;
+    width: 540px;
+    height: 310px;
+    top: 50%;
+    left: 50%;
+    margin-top: -200px;
+    margin-left: -300px;
+}
+
+    /*=== 2.1. Input ===*/
+    #table {
+        width: 100%;
+        border: none;
+    }
+
+    #table td {
+        height: 30px;
+    }
+
+    #table tr td:first-child{
+        width: 20%;
+    }
+
+    .overlay-appointment-input-wrapper {
+        width: inherit;
+    }
+
+    .overlay-appointment-input-wrapper-title {
+        height: 20px;
+        padding: 0px 0px 0px 0px;
+    }
+
+    .overlay-appointment-input-wrapper-description {
+        height: 100%;
+        padding: 10px 0px 5px 0px;
+    }
+
+    .overlay-appointment-label {
+        float: left;
+        height: 25px;
+    }
+
+    #overlayTextBoxSmall, #overlayTextBoxLarge {
+        width: 100%;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    #overlayTextBoxLarge {
+        height: 130px;
+        width: 100%;
+        border-style: solid;
+        border-width: 1px;
+        resize: none;
+    }
+
+    .overlay-appointment-check-box-repeating {
+        font-weight: bold;
+        font-size: 12px;
+        width: 125px;
+        height: 15px;
+        position: relative;
+    }
+    
+    #overlay-appointment-date-wrapper {
+        width: 170px;
+        height: 19px;
+        overflow: hidden;
+    }
+
+    .overlay-appointment-upDown-wrapper-left {
+        float: left;
+        width: 55px;
+        height: 15px;
+        /*border: 1px solid green;*/
+    }
+
+    .overlay-appointment-upDown-wrapper-middle {
+        margin: 0px 57px;
+        width: 55px;
+        height: 15px;
+        /*border: 1px solid green;*/
+    }
+
+    .overlay-appointment-upDown-wrapper-right {
+        float: right;
+        top: 0px;
+        width: 55px;
+        height: 15px;
+        /*border: 1px solid green;*/
+    }
+
+    .overlay-appointment-upDown-textField {
+        height: 15px;
+        width: 30px;
+        float: left;
+    }
+
+    .overlay-appointment-upDown-button-wrapper {
+        position: relative;
+        float: right;
+        width: 20px;
+        height: 20px;
+    }
+
+    .overlay-appointment-upDown-up-button {
+        position: absolute;
+        top: 0px;
+        margin: 0px 0px 1px 0px;
+        height: 10px;
+        width: 20px;
+    }
+    
+    .overlay-appointment-upDown-down-button {
+        margin: 8px 0px 1px 0px;
+        bottom: 0px;
+        height: 10px;
+        width: 20px;
+    }
+
+    .overlay-appointment-button-wrapper {
+        width: inherit;
+        height: 40px;
+        text-align: center;
+        position: absolute;
+        bottom: 0px;
+    }
+
+/*=== 3. Overlay DateTime ===*/
+
+#overlay-dateTime-wrapper {
+    display: none;
+    position: absolute;
+    text-transform: uppercase;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+}
+
+.overlay-dateTime {
+    font-weight: bold;
+    font-size: 12px;
+    border-style: solid;
+    border-width: 5px;
+    padding: 10px;
+    position: absolute;
+    width: 390px;
+    height: 225px;
+    top: 50%;
+    left: 50%;
+    margin-top: -115px;
+    margin-left: -175px;
+}
+
+    /*=== 3.1. Selection ===*/
+    #overlay-dateTime-dropDown {
+        font-weight: bold;
+        font-size: 12px;
+        border-style: solid;
+        border-width: 2px;
+        border-radius: 1px;
+        margin: 5px 10px 5px 10px;
+        height: 25px;
+        width: 80px;
+    }
+
+    .overlay-dateTime-button-wrapper {
+        width: inherit;
+        height: 40px;
+        text-align: center;
+        float: right;
+        bottom: 0px;
+    }
+
+/*=== 4. Overlay DateTime ===*/
+
+#overlay-login-wrapper {
+    display: none;
+    position: absolute;
+    text-transform: uppercase;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+}
+
+.overlay-login {
+    font-weight: bold;
+    font-size: 12px;
+    border-style: solid;
+    border-width: 5px;
+    padding: 10px;
+    position: absolute;
+    width: 300px;
+    height: 70px;
+    top: 50%;
+    left: 50%;
+    margin-top: -75px;
+    margin-left: -125px;
+}
+    
+    /*=== 4.1. Selection ===*/
+    .overlay-dateTime-button-wrapper {
+        width: inherit;
+        height: 40px;
+        text-align: center;
+        float: right;
+        bottom: 0px;
+    }
+
+    .overlay-login-label {
+        float: left;
+        width: 100%;
+        height: 25px;
+    }
+
+    #overlayTextBoxLogin {
+        width: 100%;
+        border-style: solid;
+        border-width: 1px;
+    }
