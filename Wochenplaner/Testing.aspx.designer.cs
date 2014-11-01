@@ -10,7 +10,7 @@
 namespace Wochenplaner {
     
     
-    public partial class Wochenplaner {
+    public partial class Testing {
         
         /// <summary>
         /// form-Steuerelement

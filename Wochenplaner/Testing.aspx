@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Wochenplaner.aspx.cs" Inherits="Wochenplaner.Wochenplaner" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Testing.aspx.cs" Inherits="Wochenplaner.Testing" %>
 
 <!DOCTYPE html>
 

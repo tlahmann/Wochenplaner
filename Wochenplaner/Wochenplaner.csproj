@@ -63,12 +63,41 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+    <Content Include="Wochenplaner-colors.pfi" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\WP_DataBase.mdf" />
+    <Content Include="App_Data\WP_DataBase_log.ldf">
+      <DependentUpon>WP_DataBase.mdf</DependentUpon>
+    </Content>
+    <Content Include="arrowDown.png" />
+    <Content Include="arrowUp.png" />
+    <Content Include="printer.png" />
+    <Content Include="StyleSheets\colors.css" />
+    <Content Include="StyleSheets\overlay.css" />
+    <Content Include="StyleSheets\style.css" />
+    <Content Include="Testing.aspx" />
     <Content Include="Web.config" />
+    <Content Include="Wochenplaner-colors.png" />
+    <Content Include="Wochenplaner.aspx" />
+    <Content Include="WP_MainScript.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Testing.aspx.cs">
+      <DependentUpon>Testing.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Testing.aspx.designer.cs">
+      <DependentUpon>Testing.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wochenplaner.aspx.cs">
+      <DependentUpon>Wochenplaner.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wochenplaner.aspx.designer.cs">
+      <DependentUpon>Wochenplaner.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
