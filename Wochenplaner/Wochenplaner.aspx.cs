@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -21,7 +22,7 @@ namespace Wochenplaner {
             }
             paintDate(getWeeknumber(DateTime.Now), DateTime.Now.Year);
             disableButtonsOnPageLoad();
-            
+
         }
 
         #region Design
@@ -181,6 +182,27 @@ namespace Wochenplaner {
         #region Display
 
         /// <summary>
+        /// shows the appointment on the website
+        /// </summary>
+        private void paintAppointment(string _datetime, string _title, string _desc) {
+            if (_title.Length > 10) {
+                _title = _title.Substring(0, 10);
+            }
+            if (_desc.Length > 10) {
+                _desc = _desc.Substring(0, 10);
+            }
+
+            // Find control on page.
+            Button chosenButton = (Button)FindControl(_datetime);
+
+            if (chosenButton != null) {
+                chosenButton.Text = _title + Environment.NewLine + _desc;
+                chosenButton.BackColor = Color.FromArgb(255, 236, 220);
+            } else {
+            }
+        }
+
+        /// <summary>
         /// Fades in the overlay for the appointment creation.</summary>
         /// <param name="dateTime">datetime takes a string containing the date and time where to create the
         /// appointment</param>
@@ -224,24 +246,13 @@ namespace Wochenplaner {
         /// <param name="year">year takes the year to display</param>
         private void paintDate(int weekNr, int year) {
             DateTime[] dt = getDatesFromWeekNumber(weekNr, year);
-            //if (bt1.Text == "Montag") /* Prüft, ob der Text des Heders aus nur einem "Montag" besteht
-            //                           und fügt, falls zutrefend, noch das datum hinzu*/ {
-            //    bt1.Text += Environment.NewLine + dt[0].ToShortDateString().ToString();
-            //    bt2.Text += Environment.NewLine + dt[1].ToShortDateString().ToString();
-            //    bt3.Text += Environment.NewLine + dt[2].ToShortDateString().ToString();
-            //    bt4.Text += Environment.NewLine + dt[3].ToShortDateString().ToString();
-            //    bt5.Text += Environment.NewLine + dt[4].ToShortDateString().ToString();
-            //    bt6.Text += Environment.NewLine + dt[5].ToShortDateString().ToString();
-            //    bt7.Text += Environment.NewLine + dt[6].ToShortDateString().ToString();
-            //} else {
-                bt1.Text = "Montag" + Environment.NewLine + dt[0].ToShortDateString().ToString();
-                bt2.Text = "Dienstag" + Environment.NewLine + dt[1].ToShortDateString().ToString();
-                bt3.Text = "Mittwoch" + Environment.NewLine + dt[2].ToShortDateString().ToString();
-                bt4.Text = "Donnerstag" + Environment.NewLine + dt[3].ToShortDateString().ToString();
-                bt5.Text = "Freitag" + Environment.NewLine + dt[4].ToShortDateString().ToString();
-                bt6.Text = "Samstag" + Environment.NewLine + dt[5].ToShortDateString().ToString();
-                bt7.Text = "Sonntag" + Environment.NewLine + dt[6].ToShortDateString().ToString();
-            //}
+            bt1.Text = "Montag" + Environment.NewLine + dt[0].ToShortDateString().ToString();
+            bt2.Text = "Dienstag" + Environment.NewLine + dt[1].ToShortDateString().ToString();
+            bt3.Text = "Mittwoch" + Environment.NewLine + dt[2].ToShortDateString().ToString();
+            bt4.Text = "Donnerstag" + Environment.NewLine + dt[3].ToShortDateString().ToString();
+            bt5.Text = "Freitag" + Environment.NewLine + dt[4].ToShortDateString().ToString();
+            bt6.Text = "Samstag" + Environment.NewLine + dt[5].ToShortDateString().ToString();
+            bt7.Text = "Sonntag" + Environment.NewLine + dt[6].ToShortDateString().ToString();
         }
 
         protected void btnBkwd_Click(object sender, EventArgs e) {
@@ -316,6 +327,7 @@ namespace Wochenplaner {
 
         protected void loginUser(object sender, EventArgs e) {
             userData.Text = overlayTextBoxLogin.Text;
+            sqlRead();
         }
 
         #endregion
@@ -382,14 +394,20 @@ namespace Wochenplaner {
                     command.Parameters.AddWithValue("@REPEAT", ddRepeat.SelectedIndex);
                     if (cbEnd.Checked) {
                         command.Parameters.AddWithValue("@ENDDATE", new DateTime(Convert.ToInt32(textBoxYear.Text), Convert.ToInt32(textBoxMonth.Text), Convert.ToInt32(textBoxDay.Text)));
+                    } else {
+                        command.Parameters.AddWithValue("@ENDDATE", new DateTime(2999, 01, 01));
                     }
+                } else {
+                    command.Parameters.AddWithValue("@REPEAT", -1);
+                    command.Parameters.AddWithValue("@ENDDATE", new DateTime(2999, 01, 01));
                 }
 
                 command.ExecuteNonQuery();
+                paintAppointment(cd, title, desc);
             } catch (Exception ex) {
                 AppointmentDelegate ad = new AppointmentDelegate();
-                ad.TriggerIt += new AppointmentCreateEventHandler(ad.displayAppointment);
-                ad.Trigger();
+                ad.TriggerError += new AppointmentCreateEventHandler(ad.playErrorSound);
+                ad._triggerError();
             }
         }
 
