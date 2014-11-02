@@ -120,3 +120,5 @@ packages/
 # User Settings
 *.dll
 *.pbd
+*.dll
+*.pdb

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
@@ -406,19 +407,25 @@ namespace Wochenplaner {
 
             try {
                 //SqlDataReader reader = null;
-                SqlCommand command = new SqlCommand("SELECT * FROM dbo.Appointments;", sqlConnection);
+                SqlCommand command = new SqlCommand("SELECT * FROM dbo.Appointments", sqlConnection);
                 //command.Parameters.AddWithValue("@USER", userData.Text);
+                //command.Parameters.Add("@USER", SqlDbType.NVarChar);
+                //command.Parameters["@USER"].Value = userData.Text;
 
                 SqlDataReader reader = command.ExecuteReader();
 
                 while (reader.Read()) {
-                    string user = reader.GetString(1);
-                    string title = reader.GetString(2);
-                    string desc = reader.GetString(3);
-                    DateTime startDate = reader.GetDateTime(4);
-                    int time = reader.GetInt32(5);
-                    DateTime endDate = reader.GetDateTime(6);
-                    int repeat = reader.GetInt32(7);
+                    if (reader.GetString(1) == userData.Text) {
+                        string user = reader.GetString(1);
+                        string title = reader.GetString(2);
+                        string desc = reader.GetString(3);
+                        DateTime startDate = reader.GetDateTime(4);
+                        int time = reader.GetInt32(5);
+                        DateTime endDate = reader.GetDateTime(6);
+                        int repeat = reader.GetInt32(7);
+
+                        paintAppointment(startDate.ToString("ddd", new CultureInfo("de-DE")) + "0" + time, title, desc);
+                    }
                 }
 
                 reader.Close();
