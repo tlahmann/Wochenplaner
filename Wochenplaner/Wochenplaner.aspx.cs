@@ -16,89 +16,95 @@ namespace Wochenplaner {
             if (subtitle.Text == "Kalenderwoche") {
                 paintWeekNumber(getWeeknumber(DateTime.Now), DateTime.Now.Year);
             }
-            if (bt1.Text == "Montag") /* Prüft, ob der Text des Heders aus nur einem "Montag" besteht
-                                       und fügt, falls zutrefend, noch das datum hinzu*/ {
-                paintDate(getWeeknumber(DateTime.Now), DateTime.Now.Year);
+            if (bt1.Text == "Montag") {
+                createRandomUser();
             }
+            paintDate(getWeeknumber(DateTime.Now), DateTime.Now.Year);
             disableButtonsOnPageLoad();
-            createRandomUser();
+            
         }
 
         #region Design
 
-        private void createRandomUser(){
-            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            var random = new Random();
-            var result = new string(
-                Enumerable.Repeat(chars, 6)
-                          .Select(s => s[random.Next(s.Length)])
-                          .ToArray());
-            userData.Text = result;
+        #region DateManagement
+
+        /// <summary>
+        /// Creates dates array to display the dates from the given weeknumber in the
+        /// webform</summary>
+        /// <param name="weekOfYear">weeknumber</param>
+        /// <param name="year">year</param>
+        /// <returns>datearray</returns>
+        /// <seealso cref="paintDate(int, int)"> Is used in method paintDate</seealso>
+        public static DateTime[] getDatesFromWeekNumber(int weekOfYear, int year) {
+            DateTime jan1 = new DateTime(year, 1, 1);
+            int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
+
+            DateTime firstThursday = jan1.AddDays(daysOffset);
+            var cal = CultureInfo.CurrentCulture.Calendar;
+            int firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+
+            var weekNum = weekOfYear;
+            if (firstWeek <= 1) {
+                weekNum -= 1;
+            }
+            var result = firstThursday.AddDays((weekNum * 7) - 4);
+            DateTime[] dt = new DateTime[7];
+            for (int i = 0; i < 7; i++) {
+                dt[i] = result.AddDays(1);
+                result = result.AddDays(1);
+            }
+            return dt;
         }
 
         /// <summary>
-        /// Displays the week number of the given time.</summary>
-        /// <param name="weekNr">weekNr takes the week number to display</param>
-        /// <param name="year">year takes the year to display</param>
-        private void paintWeekNumber(int weekNr, int year) {
-            subtitle.Text = "Kalenderwoche " + weekNr.ToString() + " - " + year.ToString();
-        }
+        /// Creates dates array to display the dates from the given weeknumber in the
+        /// webform</summary>
+        /// <param name="weekOfYear">weeknumber</param>
+        /// <param name="year">year</param>
+        /// <returns>datearray</returns>
+        /// <seealso cref="paintDate(int, int)"> Is used in method paintDate</seealso>
+        public static DateTime getDateFromWeekday(int weekOfYear, int year, string day) {
+            DateTime jan1 = new DateTime(year, 1, 1);
+            int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
 
-        /// <summary>
-        /// Displays the dates of the chosen week number.</summary>
-        /// <param name="weekNr">weekNr takes the week number to display</param>
-        /// <param name="year">year takes the year to display</param>
-        private void paintDate(int weekNr, int year) {
-            DateTime[] dt = getDateFromWeekNumber(weekNr, year);
-            bt1.Text = bt1.Text + Environment.NewLine + dt[0].ToShortDateString().ToString();
-            bt2.Text = bt2.Text + Environment.NewLine + dt[1].ToShortDateString().ToString();
-            bt3.Text = bt3.Text + Environment.NewLine + dt[2].ToShortDateString().ToString();
-            bt4.Text = bt4.Text + Environment.NewLine + dt[3].ToShortDateString().ToString();
-            bt5.Text = bt5.Text + Environment.NewLine + dt[4].ToShortDateString().ToString();
-            bt6.Text = bt6.Text + Environment.NewLine + dt[5].ToShortDateString().ToString();
-            bt7.Text = bt7.Text + Environment.NewLine + dt[6].ToShortDateString().ToString();
-        }
+            DateTime firstThursday = jan1.AddDays(daysOffset);
+            var cal = CultureInfo.CurrentCulture.Calendar;
+            int firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
-        /// <summary>
-        /// Fades in the overlay for the appointment creation.</summary>
-        /// <param name="dateTime">datetime takes a string containing the date and time where to create the
-        /// appointment</param>
-        public void fadeInOverlay(string weekday, DateTime date, string time, string buttonCode) {
-            string scriptTxt = "openInputOverlay();";
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "OverlayScript", scriptTxt, true);
-            overlayChoosenDate.Text = "Zeit: " + weekday + ", " + date.ToShortDateString() + " um " + time + ":00 Uhr (" + buttonCode + ")";
-        }
+            var weekNum = weekOfYear;
+            if (firstWeek <= 1) {
+                weekNum -= 1;
+            }
+            var result = firstThursday.AddDays(weekNum * 7);
 
-        /// <summary>
-        /// Disables the header buttons</summary>
-        private void disableButtonsOnPageLoad() {
-            this.bt1.Enabled = false;
-            this.bt2.Enabled = false;
-            this.bt3.Enabled = false;
-            this.bt4.Enabled = false;
-            this.bt5.Enabled = false;
-            this.bt6.Enabled = false;
-            this.bt7.Enabled = false;
-        }
+            int i = 0;
+            switch (day) {
+                case "MO":
+                    i = -3;
+                    break;
+                case "DI":
+                    i = -2;
+                    break;
+                case "MI":
+                    i = -1;
+                    break;
+                case "DO":
+                    i = 0;
+                    break;
+                case "FR":
+                    i = 1;
+                    break;
+                case "SA":
+                    i = 2;
+                    break;
+                case "SO":
+                    i = 3;
+                    break;
+                default:
+                    break;
+            }
 
-        /// <summary>
-        /// Event reaction to handle the button klick on the webform.</summary>
-        /// <param name="sender">sender object</param>
-        /// <param name="e">Event Argument</param>
-        protected void openOverlay(object sender, EventArgs e) {
-            Button bt = (Button)sender;
-            int mid = bt.ID.Length / 2;
-            string day = bt.ID.Substring(0, mid);
-            string time = bt.ID.Substring(mid, mid);
-            fadeInOverlay(buildDateString(day), getDateFromWeekday(getWeeknumber(), getYearnumber(), day), time, bt.ID);
-        }
-
-        /// <summary>
-        /// Event reaction to handle the button klick on the webform.</summary>
-        /// <param name="sender">sender object</param>
-        /// <param name="e">Event Argument</param>
-        protected void closeOverlay(object sender, EventArgs e) {
-
+            return result.AddDays(i);
         }
 
         /// <summary>
@@ -170,83 +176,128 @@ namespace Wochenplaner {
             return _day;
         }
 
+        #endregion
+
+        #region Display
+
         /// <summary>
-        /// Creates dates array to display the dates from the given weeknumber in the
-        /// webform</summary>
-        /// <param name="weekOfYear">weeknumber</param>
-        /// <param name="year">year</param>
-        /// <returns>datearray</returns>
-        /// <seealso cref="paintDate(int, int)"> Is used in method paintDate</seealso>
-        public static DateTime[] getDateFromWeekNumber(int weekOfYear, int year) {
-            DateTime jan1 = new DateTime(year, 1, 1);
-            int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
-
-            DateTime firstThursday = jan1.AddDays(daysOffset);
-            var cal = CultureInfo.CurrentCulture.Calendar;
-            int firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-
-            var weekNum = weekOfYear;
-            if (firstWeek <= 1) {
-                weekNum -= 1;
-            }
-            var result = firstThursday.AddDays((weekNum * 7) - 4);
-            DateTime[] dt = new DateTime[7];
-            for (int i = 0; i < 7; i++) {
-                dt[i] = result.AddDays(1);
-                result = result.AddDays(1);
-            }
-            return dt;
+        /// Fades in the overlay for the appointment creation.</summary>
+        /// <param name="dateTime">datetime takes a string containing the date and time where to create the
+        /// appointment</param>
+        public void fadeInOverlay(string weekday, DateTime date, string time, string buttonCode) {
+            string scriptTxt = "openInputOverlay();";
+            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "OverlayScript", scriptTxt, true);
+            overlayChoosenDate.Text = "Zeit: " + weekday + ", " + date.ToShortDateString() + " um " + time + ":00 Uhr (" + buttonCode + ")";
         }
 
         /// <summary>
-        /// Creates dates array to display the dates from the given weeknumber in the
-        /// webform</summary>
-        /// <param name="weekOfYear">weeknumber</param>
-        /// <param name="year">year</param>
-        /// <returns>datearray</returns>
-        /// <seealso cref="paintDate(int, int)"> Is used in method paintDate</seealso>
-        public static DateTime getDateFromWeekday(int weekOfYear, int year, string day) {
-            DateTime jan1 = new DateTime(year, 1, 1);
-            int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
+        /// Event reaction to handle the button klick on the webform.</summary>
+        /// <param name="sender">sender object</param>
+        /// <param name="e">Event Argument</param>
+        protected void openOverlay(object sender, EventArgs e) {
+            Button bt = (Button)sender;
+            int mid = bt.ID.Length / 2;
+            string day = bt.ID.Substring(0, mid);
+            string time = bt.ID.Substring(mid, mid);
+            fadeInOverlay(buildDateString(day), getDateFromWeekday(getWeeknumber(), getYearnumber(), day), time, bt.ID);
+        }
 
-            DateTime firstThursday = jan1.AddDays(daysOffset);
-            var cal = CultureInfo.CurrentCulture.Calendar;
-            int firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        /// <summary>
+        /// Event reaction to handle the button klick on the webform.</summary>
+        /// <param name="sender">sender object</param>
+        /// <param name="e">Event Argument</param>
+        protected void closeOverlay(object sender, EventArgs e) {
 
-            var weekNum = weekOfYear;
-            if (firstWeek <= 1) {
-                weekNum -= 1;
+        }
+
+        /// <summary>
+        /// Paints the given weeknumber and year to the subtitle label</summary>
+        /// <param name="weekNr">weekNr takes the week number to display</param>
+        /// <param name="year">year takes the year to display</param>
+        private void paintWeekNumber(int weekNr, int year) {
+            subtitle.Text = "Kalenderwoche " + weekNr.ToString() + " - " + year.ToString();
+        }
+
+        /// <summary>
+        /// Displays the dates of the chosen week number.</summary>
+        /// <param name="weekNr">weekNr takes the week number to display</param>
+        /// <param name="year">year takes the year to display</param>
+        private void paintDate(int weekNr, int year) {
+            DateTime[] dt = getDatesFromWeekNumber(weekNr, year);
+            //if (bt1.Text == "Montag") /* Prüft, ob der Text des Heders aus nur einem "Montag" besteht
+            //                           und fügt, falls zutrefend, noch das datum hinzu*/ {
+            //    bt1.Text += Environment.NewLine + dt[0].ToShortDateString().ToString();
+            //    bt2.Text += Environment.NewLine + dt[1].ToShortDateString().ToString();
+            //    bt3.Text += Environment.NewLine + dt[2].ToShortDateString().ToString();
+            //    bt4.Text += Environment.NewLine + dt[3].ToShortDateString().ToString();
+            //    bt5.Text += Environment.NewLine + dt[4].ToShortDateString().ToString();
+            //    bt6.Text += Environment.NewLine + dt[5].ToShortDateString().ToString();
+            //    bt7.Text += Environment.NewLine + dt[6].ToShortDateString().ToString();
+            //} else {
+                bt1.Text = "Montag" + Environment.NewLine + dt[0].ToShortDateString().ToString();
+                bt2.Text = "Dienstag" + Environment.NewLine + dt[1].ToShortDateString().ToString();
+                bt3.Text = "Mittwoch" + Environment.NewLine + dt[2].ToShortDateString().ToString();
+                bt4.Text = "Donnerstag" + Environment.NewLine + dt[3].ToShortDateString().ToString();
+                bt5.Text = "Freitag" + Environment.NewLine + dt[4].ToShortDateString().ToString();
+                bt6.Text = "Samstag" + Environment.NewLine + dt[5].ToShortDateString().ToString();
+                bt7.Text = "Sonntag" + Environment.NewLine + dt[6].ToShortDateString().ToString();
+            //}
+        }
+
+        protected void btnBkwd_Click(object sender, EventArgs e) {
+            string[] words = subtitle.Text.Split(' ');
+            int week = Convert.ToInt32(words[1]);
+            int year = Convert.ToInt32(words[3]);
+            if (week <= 1) {
+                week = 52;
+                year -= 1;
+            } else {
+                week -= 1;
             }
-            var result = firstThursday.AddDays(weekNum * 7);
+            paintWeekNumber(week, year);
+            paintDate(week, year);
+        }
 
-            int i = 0;
-            switch (day) {
-                case "MO":
-                    i = -3;
-                    break;
-                case "DI":
-                    i = -2;
-                    break;
-                case "MI":
-                    i = -1;
-                    break;
-                case "DO":
-                    i = 0;
-                    break;
-                case "FR":
-                    i = 1;
-                    break;
-                case "SA":
-                    i = 2;
-                    break;
-                case "SO":
-                    i = 3;
-                    break;
-                default:
-                    break;
+        protected void btnFwrd_Click(object sender, EventArgs e) {
+            string[] words = subtitle.Text.Split(' ');
+            int week = Convert.ToInt32(words[1]);
+            int year = Convert.ToInt32(words[3]);
+            if (week >= 52) {
+                week = 1;
+                year += 1;
+            } else {
+                week += 1;
             }
+            paintWeekNumber(week, year);
+            paintDate(week, year);
+        }
 
-            return result.AddDays(i);
+        #endregion
+
+        /// <summary>
+        /// Creates a random String to be used as user login to (teporarily) save
+        /// the entered appointments
+        /// </summary>
+        private void createRandomUser() {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var random = new Random();
+            var result = new string(
+                Enumerable.Repeat(chars, 6)
+                          .Select(s => s[random.Next(s.Length)])
+                          .ToArray());
+            userData.Text = result;
+        }
+
+        /// <summary>
+        /// Disables the header buttons</summary>
+        private void disableButtonsOnPageLoad() {
+            this.bt1.Enabled = false;
+            this.bt2.Enabled = false;
+            this.bt3.Enabled = false;
+            this.bt4.Enabled = false;
+            this.bt5.Enabled = false;
+            this.bt6.Enabled = false;
+            this.bt7.Enabled = false;
         }
 
         #endregion
@@ -382,5 +433,6 @@ namespace Wochenplaner {
         }
 
         #endregion
+
     }
 }

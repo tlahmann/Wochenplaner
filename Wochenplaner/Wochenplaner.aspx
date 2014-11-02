@@ -26,8 +26,8 @@
             </div>
             <asp:ImageButton ID="print" runat="server" ImageUrl="printer.png" />
             <div class="navigation">
-                <asp:Button ID="btnBkwd" CssClass="navgation-button" runat="server" Text="<"></asp:Button>
-                <asp:Button ID="btnFwrd" CssClass="navgation-button" runat="server" Text=">"></asp:Button>
+                <asp:Button ID="btnBkwd" CssClass="navgation-button" runat="server" Text="<" OnClick="btnBkwd_Click"></asp:Button>
+                <asp:Button ID="btnFwrd" CssClass="navgation-button" runat="server" Text=">" OnClick="btnFwrd_Click"></asp:Button>
             </div>
             <div class="user-login-wrapper">
                 <div>
