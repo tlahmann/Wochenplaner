@@ -22,7 +22,7 @@ namespace Wochenplaner {
             }
             paintDate(getWeeknumber(DateTime.Now), DateTime.Now.Year);
             disableButtonsOnPageLoad();
-
+            sqlRead();
         }
 
         #region Design
@@ -347,23 +347,6 @@ namespace Wochenplaner {
                 sqlWrite(sqlConnection);
             } catch (Exception ex) {
             }
-
-            //Appointment appointment = new Appointment();;
-            //if (textBoxTitle.Text != "" || !textBoxTitle.Text.Equals("") || textBoxTitle.Text != null || !textBoxTitle.Text.Equals(null)) {
-            //    appointment.setTitle(textBoxTitle.Text);
-            //}
-            //if (textBoxDesc.Text != "" || !textBoxDesc.Text.Equals("") || textBoxDesc.Text != null || !textBoxDesc.Text.Equals(null)) {
-            //    appointment.setDesc(textBoxDesc.Text);
-            //}
-            //appList.Add(appointment);
-            //String desc;
-            //if (this.overlayTextBoxDescription.Text.Length > 12) {
-            //    desc = overlayTextBoxDescription.Text.Substring(0, 12);
-            //} else {
-            //    desc = overlayTextBoxDescription.Text;
-            //}
-            //buttons[lastClickedButton].Text = overlayTextBoxTitle.Text + Environment.NewLine + desc;
-
         }
 
         /// <summary>
@@ -415,20 +398,35 @@ namespace Wochenplaner {
         /// reads an entry from an sql table
         /// </summary>
         private void sqlRead() {
-            // TODO READ!
-            //try {
-            //    SqlDataReader myReader = null;
-            //    SqlCommand myCommand = new SqlCommand("Select * from appointment", sqlConnection);
-            //    myReader = myCommand.ExecuteReader();
-            //    while (myReader.Read()) {
-            ////        Console.WriteLine(myReader["Column1"].ToString());
-            ////        Console.WriteLine(myReader["Column2"].ToString());
-            //    }
-            //} catch (Exception ex) {
-            //    AppointmentDelegate ad = new AppointmentDelegate();
-            //    ad.TriggerIt += new AppointmentCreateEventHandler(ad.displayAppointment);
-            //    ad.Trigger();
-            //}
+            SqlConnection sqlConnection = new SqlConnection(@"Data Source=(LocalDB)\v11.0;AttachDbFilename=D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\App_Data\WP_DataBase.mdf;Integrated Security=True");
+            try {
+                sqlConnection.Open();
+            } catch (Exception ex) {
+            }
+
+            try {
+                //SqlDataReader reader = null;
+                SqlCommand command = new SqlCommand("SELECT * FROM dbo.Appointments;", sqlConnection);
+                //command.Parameters.AddWithValue("@USER", userData.Text);
+
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read()) {
+                    string user = reader.GetString(1);
+                    string title = reader.GetString(2);
+                    string desc = reader.GetString(3);
+                    DateTime startDate = reader.GetDateTime(4);
+                    int time = reader.GetInt32(5);
+                    DateTime endDate = reader.GetDateTime(6);
+                    int repeat = reader.GetInt32(7);
+                }
+
+                reader.Close();
+            } catch (Exception ex) {
+                AppointmentDelegate ad = new AppointmentDelegate();
+                ad.TriggerError += new AppointmentCreateEventHandler(ad.playErrorSound);
+                ad._triggerError();
+            }
         }
 
         /// <summary>
