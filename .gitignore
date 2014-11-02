@@ -75,6 +75,12 @@ ipch/
 [Rr]elease*/
 Ankh.NoLoad
 
+*.suo
+*.user
+_ReSharper.*
+bin
+obj
+
 #MonoDevelop
 *.pidb
 *.userprefs
