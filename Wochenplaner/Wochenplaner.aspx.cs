@@ -406,7 +406,6 @@ namespace Wochenplaner {
             }
 
             try {
-                //SqlDataReader reader = null;
                 SqlCommand command = new SqlCommand("SELECT * FROM dbo.Appointments", sqlConnection);
                 //command.Parameters.AddWithValue("@USER", userData.Text);
                 //command.Parameters.Add("@USER", SqlDbType.NVarChar);
@@ -414,7 +413,7 @@ namespace Wochenplaner {
 
                 SqlDataReader reader = command.ExecuteReader();
 
-                while (reader.Read()) {
+                while (reader.Read()) { // TODO Optimierungsbedarf hier!
                     if (reader.GetString(1) == userData.Text) {
                         string user = reader.GetString(1);
                         string title = reader.GetString(2);
