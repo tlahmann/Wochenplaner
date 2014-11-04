@@ -22,7 +22,7 @@ namespace Wochenplaner {
             if (bt1.Text == "Montag") {
                 createRandomUser();
             }
-            paintDate(getWeeknumber(DateTime.Now), DateTime.Now.Year);
+            paintDates(getWeeknumber(DateTime.Now), DateTime.Now.Year);
             disableButtonsOnPageLoad();
             sqlRead();
         }
@@ -37,7 +37,7 @@ namespace Wochenplaner {
         /// <param name="weekOfYear">weeknumber</param>
         /// <param name="year">year</param>
         /// <returns>datearray</returns>
-        /// <seealso cref="paintDate(int, int)"> Is used in method paintDate</seealso>
+        /// <seealso cref="paintDates(int, int)"> Is used in method paintDate</seealso>
         public static DateTime[] getDatesFromWeekNumber(int weekOfYear, int year) {
             DateTime jan1 = new DateTime(year, 1, 1);
             int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
@@ -65,7 +65,7 @@ namespace Wochenplaner {
         /// <param name="weekOfYear">weeknumber</param>
         /// <param name="year">year</param>
         /// <returns>datearray</returns>
-        /// <seealso cref="paintDate(int, int)"> Is used in method paintDate</seealso>
+        /// <seealso cref="paintDates(int, int)"> Is used in method paintDate</seealso>
         public static DateTime getDateFromWeekday(int weekOfYear, int year, string day) {
             DateTime jan1 = new DateTime(year, 1, 1);
             int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
@@ -116,7 +116,7 @@ namespace Wochenplaner {
         /// <param name="weekOfYear">weeknumber</param>
         /// <param name="year">year</param>
         /// <returns>datearray</returns>
-        /// <seealso cref="paintDate(int, int)"> Is used in method paintDate</seealso>
+        /// <seealso cref="paintDates(int, int)"> Is used in method paintDate</seealso>
         public static int getDateFromWeekday(string day, int weekOfYear, int year) {
             DateTime jan1 = new DateTime(year, 1, 1);
             int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
@@ -310,7 +310,7 @@ namespace Wochenplaner {
         /// Displays the dates of the chosen week number.</summary>
         /// <param name="weekNr">weekNr takes the week number to display</param>
         /// <param name="year">year takes the year to display</param>
-        private void paintDate(int weekNr, int year) {
+        private void paintDates(int weekNr, int year) {
             DateTime[] dt = getDatesFromWeekNumber(weekNr, year);
             bt1.Text = "Montag" + Environment.NewLine + dt[0].ToShortDateString().ToString();
             bt2.Text = "Dienstag" + Environment.NewLine + dt[1].ToShortDateString().ToString();
@@ -321,7 +321,12 @@ namespace Wochenplaner {
             bt7.Text = "Sonntag" + Environment.NewLine + dt[6].ToShortDateString().ToString();
         }
 
-        protected void btnBkwd_Click(object sender, EventArgs e) {
+        /// <summary>
+        /// Reacts to the button click "backwards"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void moveWeekBackwards(object sender, EventArgs e) {
             string[] words = subtitle.Text.Split(' ');
             int week = Convert.ToInt32(words[1]);
             int year = Convert.ToInt32(words[3]);
@@ -332,10 +337,15 @@ namespace Wochenplaner {
                 week -= 1;
             }
             paintWeekNumber(week, year);
-            paintDate(week, year);
+            paintDates(week, year);
         }
 
-        protected void btnFwrd_Click(object sender, EventArgs e) {
+        /// <summary>
+        /// Reacts to the button click "forwards"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void moveWeekForwards(object sender, EventArgs e) {
             string[] words = subtitle.Text.Split(' ');
             int week = Convert.ToInt32(words[1]);
             int year = Convert.ToInt32(words[3]);
@@ -346,7 +356,16 @@ namespace Wochenplaner {
                 week += 1;
             }
             paintWeekNumber(week, year);
-            paintDate(week, year);
+            paintDates(week, year);
+        }
+
+        /// <summary>
+        /// Prints the acutally shown calendar view
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void printCalendar(object sender, ImageClickEventArgs e) {
+
         }
 
         #endregion
@@ -527,6 +546,5 @@ namespace Wochenplaner {
         }
 
         #endregion
-
     }
 }

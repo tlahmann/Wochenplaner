@@ -24,10 +24,10 @@
             <div>
                 <asp:Label ID="subtitle" runat="server" Text="Kalenderwoche"></asp:Label>
             </div>
-            <asp:ImageButton ID="print" runat="server" ImageUrl="printer.png" />
+            <asp:ImageButton ID="print" runat="server" ImageUrl="printer.png" OnClick="printCalendar"/>
             <div class="navigation">
-                <asp:Button ID="btnBkwd" CssClass="navgation-button" runat="server" Text="<" OnClick="btnBkwd_Click"></asp:Button>
-                <asp:Button ID="btnFwrd" CssClass="navgation-button" runat="server" Text=">" OnClick="btnFwrd_Click"></asp:Button>
+                <asp:Button ID="btnBkwd" CssClass="navgation-button" runat="server" Text="<" OnClick="moveWeekBackwards"></asp:Button>
+                <asp:Button ID="btnFwrd" CssClass="navgation-button" runat="server" Text=">" OnClick="moveWeekForwards"></asp:Button>
             </div>
             <div class="user-login-wrapper">
                 <div>

@@ -4,8 +4,12 @@ using System.Linq;
 using System.Web;
 using System.Globalization;
 
-namespace Wochenplaner {
+namespace Wochenplaner.App_Code {
     public class Appointment {
+        #region Variables
+        /// <summary>
+        /// Declaration of variables
+        /// </summary>
         private string user;
         public string User { get { return this.user; } set { this.user = value; } }
         private string title;
@@ -18,6 +22,7 @@ namespace Wochenplaner {
         public DateTime EndDate { get { return this.endDate; } set { this.endDate = value; } }
         private byte repeat;
         public byte Repeat { get { return this.repeat; } set { this.repeat = value; } }
+        #endregion
 
         /// <summary>
         /// Constructor for 3 variables
