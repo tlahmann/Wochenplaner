@@ -13,6 +13,7 @@ using Wochenplaner.App_Code;
 
 namespace Wochenplaner {
     public partial class Wochenplaner: System.Web.UI.Page {
+        SqlConnection sqlConnection = new SqlConnection(@"Data Source=(LocalDB)\v11.0;AttachDbFilename=D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\App_Data\WP_DataBase.mdf;Integrated Security=True");
 
         protected void Page_Load(object sender, EventArgs e) {
             if (subtitle.Text == "Kalenderwoche") {
@@ -236,20 +237,33 @@ namespace Wochenplaner {
         /// <summary>
         /// shows the appointment on the website
         /// </summary>
-        private void paintAppointment(string _datetime, string _title, string _desc) {
-            if (_title.Length > 10) {
-                _title = _title.Substring(0, 10);
+        /// <param name="_appo">An appointment to show</param>
+        private void paintAppointment(Appointment _appo) {
+            string _title;
+            string _desc = null;
+            if (_appo.Title.Length > 10) {
+                _title = _appo.Title.Substring(0, 10);
+            } else {
+                _title = _appo.Title;
             }
-            if (_desc.Length > 10) {
-                _desc = _desc.Substring(0, 10);
+            if (_appo.Description != null) {
+                if (_appo.Description.Length > 10) {
+                    _desc = _appo.Description.Substring(0, 10);
+                } else {
+                    _desc = _appo.Description;
+                }
             }
 
             // Find control on page.
-            Button chosenButton = (Button)FindControl(_datetime);
+            Button chosenButton = (Button)FindControl(_appo.toShortDateTime());
 
             if (chosenButton != null) {
-                chosenButton.Text = _title + Environment.NewLine + _desc;
-                chosenButton.BackColor = Color.FromArgb(255, 236, 220);
+                if (_desc != null) {
+                    chosenButton.Text = _title + Environment.NewLine + _desc;
+                } else {
+                    chosenButton.Text = _title;
+                }
+                chosenButton.BackColor = Color.FromArgb(255, 236, 220); // Paints the button in a other color to shot that an Appointment is present
             } else {
             }
         }
@@ -393,7 +407,6 @@ namespace Wochenplaner {
         /// <param name="sender">object sender</param>
         /// <param name="e">event e</param>
         protected void createAppointment(object sender, EventArgs e) {
-            SqlConnection sqlConnection = new SqlConnection(@"Data Source=(LocalDB)\v11.0;AttachDbFilename=D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\App_Data\WP_DataBase.mdf;Integrated Security=True");
             try {
                 sqlConnection.Open();
                 sqlWrite(sqlConnection);
@@ -432,11 +445,11 @@ namespace Wochenplaner {
                     if (cbEnd.Checked) {
                         command.Parameters.AddWithValue("@ENDDATE", new DateTime(Convert.ToInt32(textBoxYear.Text), Convert.ToInt32(textBoxMonth.Text), Convert.ToInt32(textBoxDay.Text)));
                     } else {
-                        command.Parameters.AddWithValue("@ENDDATE", new DateTime(2999, 01, 01, _time, 00, 00));
+                        command.Parameters.AddWithValue("@ENDDATE", null);
                     }
                 } else {
-                    command.Parameters.AddWithValue("@REPEAT", -1);
-                    command.Parameters.AddWithValue("@ENDDATE", new DateTime(2999, 01, 01, _time, 00, 00));
+                    command.Parameters.AddWithValue("@REPEAT", null);
+                    command.Parameters.AddWithValue("@ENDDATE", new DateTime(9999, 01, 01, _time, 00, 00));
                 }
 
                 command.ExecuteNonQuery();
@@ -452,13 +465,9 @@ namespace Wochenplaner {
         /// reads an entry from an sql table
         /// </summary>
         private void sqlRead() {
-            SqlConnection sqlConnection = new SqlConnection(@"Data Source=(LocalDB)\v11.0;AttachDbFilename=D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\App_Data\WP_DataBase.mdf;Integrated Security=True");
             try {
                 sqlConnection.Open();
-            } catch (Exception ex) {
-            }
 
-            try {
                 SqlCommand command = new SqlCommand("SELECT * FROM dbo.Appointments", sqlConnection);
                 //command.Parameters.AddWithValue("@USER", userData.Text);
                 //command.Parameters.Add("@USER", SqlDbType.NVarChar);
@@ -466,16 +475,27 @@ namespace Wochenplaner {
 
                 SqlDataReader reader = command.ExecuteReader();
 
-                while (reader.Read()) { // TODO Optimierungsbedarf hier!
+                while (reader.Read()) {
                     if (reader.GetString(1) == userData.Text) {
                         string user = reader.GetString(1);
                         string title = reader.GetString(2);
                         string desc = reader.GetString(3);
                         DateTime startDate = reader.GetDateTime(4);
-                        DateTime endDate = reader.GetDateTime(6);
-                        int repeat = reader.GetInt32(7);
+                        DateTime endDate = reader.GetDateTime(5);
+                        byte repeat = reader.GetByte(6);
 
-                        paintAppointment(startDate.ToString("ddd", new CultureInfo("de-DE")) + "0" + startDate.Hour, title, desc);
+                        Appointment appo = null;
+                        if (repeat != null) {
+                            appo = new Appointment(user, title, desc, startDate, endDate, repeat);
+                        } else if (endDate != null) {
+                            appo = new Appointment(user, title, desc, startDate, endDate);
+                        } else if (desc != null) {
+                            appo = new Appointment(user, title, desc, startDate);
+                        } else {
+                            appo = new Appointment(user, title, startDate);
+                        }
+
+                        paintAppointment(appo);
                     }
                 }
 
