@@ -12,7 +12,7 @@ using System.Data.SqlClient;
 using Wochenplaner.App_Code;
 
 namespace Wochenplaner {
-    public partial class Wochenplaner : System.Web.UI.Page {
+    public partial class Wochenplaner: System.Web.UI.Page {
 
         protected void Page_Load(object sender, EventArgs e) {
             if (subtitle.Text == "Kalenderwoche") {
@@ -49,7 +49,7 @@ namespace Wochenplaner {
             if (firstWeek <= 1) {
                 weekNum -= 1;
             }
-            var result = firstThursday.AddDays((weekNum * 7) - 4);
+            var result = firstThursday.AddDays(( weekNum * 7 ) - 4);
             DateTime[] dt = new DateTime[7];
             for (int i = 0; i < 7; i++) {
                 dt[i] = result.AddDays(1);
@@ -59,7 +59,7 @@ namespace Wochenplaner {
         }
 
         /// <summary>
-        /// Creates dates array to display the dates from the given weeknumber in the
+        /// Creates date from the given weeknumber in the
         /// webform</summary>
         /// <param name="weekOfYear">weeknumber</param>
         /// <param name="year">year</param>
@@ -107,6 +107,57 @@ namespace Wochenplaner {
             }
 
             return result.AddDays(i);
+        }
+
+        /// <summary>
+        /// Creates date from the given weeknumber in the
+        /// webform</summary>
+        /// <param name="weekOfYear">weeknumber</param>
+        /// <param name="year">year</param>
+        /// <returns>datearray</returns>
+        /// <seealso cref="paintDate(int, int)"> Is used in method paintDate</seealso>
+        public static int getDateFromWeekday(string day, int weekOfYear, int year) {
+            DateTime jan1 = new DateTime(year, 1, 1);
+            int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
+
+            DateTime firstThursday = jan1.AddDays(daysOffset);
+            var cal = CultureInfo.CurrentCulture.Calendar;
+            int firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+
+            var weekNum = weekOfYear;
+            if (firstWeek <= 1) {
+                weekNum -= 1;
+            }
+            var result = firstThursday.AddDays(weekNum * 7);
+
+            int i = 0;
+            switch (day) {
+                case "MO":
+                    i = -3;
+                    break;
+                case "DI":
+                    i = -2;
+                    break;
+                case "MI":
+                    i = -1;
+                    break;
+                case "DO":
+                    i = 0;
+                    break;
+                case "FR":
+                    i = 1;
+                    break;
+                case "SA":
+                    i = 2;
+                    break;
+                case "SO":
+                    i = 3;
+                    break;
+                default:
+                    break;
+            }
+
+            return result.AddDays(i).Day;
         }
 
         /// <summary>
@@ -356,34 +407,36 @@ namespace Wochenplaner {
         private void sqlWrite(SqlConnection sqlCon) {
             string cd = Regex.Match(overlayChoosenDate.Text, @"\(([^)]*)\)").Groups[1].Value;
             int mid = cd.Length / 2;
-            string day = cd.Substring(0, mid);
-            string time = cd.Substring(mid, mid);
+            string _day = cd.Substring(0, mid);
+            int _time = Convert.ToInt32(cd.Substring(mid, mid));
 
             try {
                 // Grap user data and content
                 string user = userData.Text;
                 string title = overlayTextBoxSmall.Text;
                 string desc = overlayTextBoxLarge.Text;
+                int year = getYearnumber();
+                int weekNr = getWeeknumber();
+                int month = new DateTime(year, 1, 1).AddDays(7 * ( weekNr - 1 )).Month;
+                int day = getDateFromWeekday(_day, weekNr, year);
+                DateTime startDate = new DateTime(year, month, day, _time, 00, 00);
 
-                DateTime startDate = getDateFromWeekday(getWeeknumber(), getYearnumber(), day);
-
-                SqlCommand command = new SqlCommand("INSERT INTO appointments VALUES (@USER, @TITLE, @DESC, @STARTDATE, @TIME, @ENDDATE, @REPEAT)", sqlCon);
+                SqlCommand command = new SqlCommand("INSERT INTO appointments VALUES (@USER, @TITLE, @DESC, @STARTDATE, @ENDDATE, @REPEAT)", sqlCon);
                 command.Parameters.AddWithValue("@USER", user);
                 command.Parameters.AddWithValue("@TITLE", title);
                 command.Parameters.AddWithValue("@DESC", desc);
                 command.Parameters.AddWithValue("@STARTDATE", startDate);
-                command.Parameters.AddWithValue("@TIME", time);
 
                 if (cbRepeat.Checked) {
                     command.Parameters.AddWithValue("@REPEAT", ddRepeat.SelectedIndex);
                     if (cbEnd.Checked) {
                         command.Parameters.AddWithValue("@ENDDATE", new DateTime(Convert.ToInt32(textBoxYear.Text), Convert.ToInt32(textBoxMonth.Text), Convert.ToInt32(textBoxDay.Text)));
                     } else {
-                        command.Parameters.AddWithValue("@ENDDATE", new DateTime(2999, 01, 01));
+                        command.Parameters.AddWithValue("@ENDDATE", new DateTime(2999, 01, 01, _time, 00, 00));
                     }
                 } else {
                     command.Parameters.AddWithValue("@REPEAT", -1);
-                    command.Parameters.AddWithValue("@ENDDATE", new DateTime(2999, 01, 01));
+                    command.Parameters.AddWithValue("@ENDDATE", new DateTime(2999, 01, 01, _time, 00, 00));
                 }
 
                 command.ExecuteNonQuery();
@@ -419,11 +472,10 @@ namespace Wochenplaner {
                         string title = reader.GetString(2);
                         string desc = reader.GetString(3);
                         DateTime startDate = reader.GetDateTime(4);
-                        int time = reader.GetInt32(5);
                         DateTime endDate = reader.GetDateTime(6);
                         int repeat = reader.GetInt32(7);
 
-                        paintAppointment(startDate.ToString("ddd", new CultureInfo("de-DE")) + "0" + time, title, desc);
+                        paintAppointment(startDate.ToString("ddd", new CultureInfo("de-DE")) + "0" + startDate.Hour, title, desc);
                     }
                 }
 
