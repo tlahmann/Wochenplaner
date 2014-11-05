@@ -9,8 +9,8 @@ namespace Wochenplaner.App_Code {
         /// <summary>
         /// Declaration of variables
         /// </summary>
-        private readonly string id;
-        public string Id { get { return this.id; } set; }
+        private string id = "abc";
+        public string Id { get { return this.id; } set { this.id = value;} }
         private string name;
         public string Name { get { return this.name; } set { this.name = value; } }
         private string password;
@@ -18,20 +18,20 @@ namespace Wochenplaner.App_Code {
         #endregion
 
         /// <summary>
-        /// Constructor for variable id (empty user)
+        /// Empty constructor creates random user id (empty user)
         /// </summary>
         /// <param name="_id">The id of the user</param>
-        public UserData(string _id) {
-            this.id = _id;
+        public UserData() {
+            this.id = createUserId();
         }
 
         /// <summary>
-        /// Constructor for 2 variables
+        /// Constructor for variable name
         /// </summary>
         /// <param name="_id">The id of the user</param>
         /// <param name="_name">The name of the user</param>
-        public UserData(string _id, string _name) {
-            this.id = _id;
+        public UserData(string _name) {
+            this.id = createUserId();
             this.name = _name;
         }
 
@@ -46,6 +46,20 @@ namespace Wochenplaner.App_Code {
             this.id = _id;
             this.name = _name;
             this.password = _pass;
+        }
+
+        /// <summary>
+        /// Creates a random string to be used as the user id
+        /// </summary>
+        /// <returns>user id</returns>
+        private string createUserId() {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var random = new Random();
+            var result = new string(
+                Enumerable.Repeat(chars, 10)
+                          .Select(s => s[random.Next(s.Length)])
+                          .ToArray());
+            return result;
         }
     }
 }

@@ -30,6 +30,11 @@ namespace Wochenplaner.App_Code {
         /// </summary>
         internal WPModel() {
             appointmentList = new LinkedList<Appointment>();
+            this.year = DateTime.Now.Year;
+            this.month = DateTime.Now.Month;
+            this.week = getWeeknumber();
+            dates = new DateTime[7];
+            updateDates();
         }
 
         /// <summary>
@@ -140,6 +145,20 @@ namespace Wochenplaner.App_Code {
                 dates[i] = result.AddDays(1);
                 result = result.AddDays(1);
             }
+        }
+
+        /// <summary>
+        /// <c>getWeeknumber</c> is a method in the <c>Wochenplaner</c> class. It is used to 
+        /// calculate a weeknumber from a given DateTime</summary>
+        /// <returns>weeknumber of the given time</returns>
+        private int getWeeknumber() {
+            DateTime time = DateTime.Now;
+            DayOfWeek day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(time);
+            if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday) {
+                time = time.AddDays(3);
+            }
+
+            return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         }
     }
 }

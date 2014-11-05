@@ -90,7 +90,7 @@
   <ItemGroup>
     <Compile Include="App_Code\Appointment.cs" />
     <Compile Include="App_Code\AppointmentDelegate.cs" />
-    <Compile Include="App_Code\WPmodel.cs" />
+    <Compile Include="App_Code\WPModel.cs" />
     <Content Include="App_Code\UserData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Testing.aspx.cs">

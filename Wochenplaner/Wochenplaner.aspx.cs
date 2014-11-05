@@ -15,15 +15,18 @@ using Wochenplaner.App_Code;
 namespace Wochenplaner {
     public partial class Wochenplaner: System.Web.UI.Page {
         SqlConnection sqlConnection = new SqlConnection(@"Data Source=(LocalDB)\v11.0;AttachDbFilename=D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\App_Data\WP_DataBase.mdf;Integrated Security=True");
-        WPmodel wpm;
+        WPModel wpm;
 
         protected void Page_Load(object sender, EventArgs e) {
-            if (subtitle.Text == "Kalenderwoche") {
-                paintWeekNumber(pagesSection.EnableSessionState, DateTime.Now.Year);
+
+            if (Session["Wochenplaner"] != null) {
+                userData.Text = Session["Wochenplaner"].ToString();
+                //BodyTag.Style["background-color"] = ColorSelector.SelectedValue;
             }
-            if (bt1.Text == "Montag") {
-                createRandomUser();
-            }
+
+            wpm = new WPModel();
+            paintWeekNumber(10, DateTime.Now.Year);
+            createRandomUser();
             paintDates(getWeeknumber(DateTime.Now), DateTime.Now.Year);
             disableButtonsOnPageLoad();
             sqlRead();
@@ -163,19 +166,7 @@ namespace Wochenplaner {
             return result.AddDays(i).Day;
         }
 
-        ///// <summary>
-        ///// <c>getWeeknumber</c> is a method in the <c>Wochenplaner</c> class. It is used to 
-        ///// calculate a weeknumber from a given DateTime</summary>
-        ///// <param name="time">time</param>
-        ///// <returns>weeknumber of the given time</returns>
-        //private int getWeeknumber(DateTime time) {
-        //    DayOfWeek day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(time);
-        //    if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday) {
-        //        time = time.AddDays(3);
-        //    }
-
-        //    return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-        //}
+        
 
         ///// <summary>
         ///// getWeeknumber gets the weeknumber from the displayed
@@ -377,13 +368,7 @@ namespace Wochenplaner {
         /// the entered appointments
         /// </summary>
         private void createRandomUser() {
-            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            var random = new Random();
-            var result = new string(
-                Enumerable.Repeat(chars, 6)
-                          .Select(s => s[random.Next(s.Length)])
-                          .ToArray());
-            userData.Text = result;
+            
         }
 
         /// <summary>
