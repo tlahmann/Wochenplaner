@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.Configuration;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Data.SqlClient;
@@ -14,10 +15,11 @@ using Wochenplaner.App_Code;
 namespace Wochenplaner {
     public partial class Wochenplaner: System.Web.UI.Page {
         SqlConnection sqlConnection = new SqlConnection(@"Data Source=(LocalDB)\v11.0;AttachDbFilename=D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\App_Data\WP_DataBase.mdf;Integrated Security=True");
+        WP_model wpm;
 
         protected void Page_Load(object sender, EventArgs e) {
             if (subtitle.Text == "Kalenderwoche") {
-                paintWeekNumber(getWeeknumber(DateTime.Now), DateTime.Now.Year);
+                paintWeekNumber(pagesSection.EnableSessionState, DateTime.Now.Year);
             }
             if (bt1.Text == "Montag") {
                 createRandomUser();
@@ -31,33 +33,33 @@ namespace Wochenplaner {
 
         #region DateManagement
 
-        /// <summary>
-        /// Creates dates array to display the dates from the given weeknumber in the
-        /// webform</summary>
-        /// <param name="weekOfYear">weeknumber</param>
-        /// <param name="year">year</param>
-        /// <returns>datearray</returns>
-        /// <seealso cref="paintDates(int, int)"> Is used in method paintDate</seealso>
-        public static DateTime[] getDatesFromWeekNumber(int weekOfYear, int year) {
-            DateTime jan1 = new DateTime(year, 1, 1);
-            int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
+        ///// <summary>
+        ///// Creates dates array to display the dates from the given weeknumber in the
+        ///// webform</summary>
+        ///// <param name="weekOfYear">weeknumber</param>
+        ///// <param name="year">year</param>
+        ///// <returns>datearray</returns>
+        ///// <seealso cref="paintDates(int, int)"> Is used in method paintDate</seealso>
+        //public static DateTime[] getDatesFromWeekNumber(int weekOfYear, int year) {
+        //    DateTime jan1 = new DateTime(year, 1, 1);
+        //    int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
 
-            DateTime firstThursday = jan1.AddDays(daysOffset);
-            var cal = CultureInfo.CurrentCulture.Calendar;
-            int firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        //    DateTime firstThursday = jan1.AddDays(daysOffset);
+        //    var cal = CultureInfo.CurrentCulture.Calendar;
+        //    int firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
-            var weekNum = weekOfYear;
-            if (firstWeek <= 1) {
-                weekNum -= 1;
-            }
-            var result = firstThursday.AddDays(( weekNum * 7 ) - 4);
-            DateTime[] dt = new DateTime[7];
-            for (int i = 0; i < 7; i++) {
-                dt[i] = result.AddDays(1);
-                result = result.AddDays(1);
-            }
-            return dt;
-        }
+        //    var weekNum = weekOfYear;
+        //    if (firstWeek <= 1) {
+        //        weekNum -= 1;
+        //    }
+        //    var result = firstThursday.AddDays(( weekNum * 7 ) - 4);
+        //    DateTime[] dt = new DateTime[7];
+        //    for (int i = 0; i < 7; i++) {
+        //        dt[i] = result.AddDays(1);
+        //        result = result.AddDays(1);
+        //    }
+        //    return dt;
+        //}
 
         /// <summary>
         /// Creates date from the given weeknumber in the
@@ -161,39 +163,39 @@ namespace Wochenplaner {
             return result.AddDays(i).Day;
         }
 
-        /// <summary>
-        /// <c>getWeeknumber</c> is a method in the <c>Wochenplaner</c> class. It is used to 
-        /// calculate a weeknumber from a given DateTime</summary>
-        /// <param name="time">time</param>
-        /// <returns>weeknumber of the given time</returns>
-        private int getWeeknumber(DateTime time) {
-            DayOfWeek day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(time);
-            if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday) {
-                time = time.AddDays(3);
-            }
+        ///// <summary>
+        ///// <c>getWeeknumber</c> is a method in the <c>Wochenplaner</c> class. It is used to 
+        ///// calculate a weeknumber from a given DateTime</summary>
+        ///// <param name="time">time</param>
+        ///// <returns>weeknumber of the given time</returns>
+        //private int getWeeknumber(DateTime time) {
+        //    DayOfWeek day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(time);
+        //    if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday) {
+        //        time = time.AddDays(3);
+        //    }
 
-            return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-        }
+        //    return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        //}
 
-        /// <summary>
-        /// getWeeknumber gets the weeknumber from the displayed
-        /// week-string (asp - header)
-        /// <returns>weeknumber of the shown time</returns>
-        private int getWeeknumber() {
-            string[] words = subtitle.Text.Split(' ');
+        ///// <summary>
+        ///// getWeeknumber gets the weeknumber from the displayed
+        ///// week-string (asp - header)
+        ///// <returns>weeknumber of the shown time</returns>
+        //private int getWeeknumber() {
+        //    string[] words = subtitle.Text.Split(' ');
 
-            return Convert.ToInt32(words[1]);
-        }
+        //    return Convert.ToInt32(words[1]);
+        //}
 
-        /// <summary>
-        /// <c>getWeeknumber</c> gets the yearnumber from the displayed
-        /// week-string (asp - header)
-        /// <returns>yearnumber of the shown time</returns>
-        private int getYearnumber() {
-            string[] words = subtitle.Text.Split(' ');
+        ///// <summary>
+        ///// <c>getWeeknumber</c> gets the yearnumber from the displayed
+        ///// week-string (asp - header)
+        ///// <returns>yearnumber of the shown time</returns>
+        //private int getYearnumber() {
+        //    string[] words = subtitle.Text.Split(' ');
 
-            return Convert.ToInt32(words[3]);
-        }
+        //    return Convert.ToInt32(words[3]);
+        //}
 
         /// <summary>
         /// Create a date string from a day and time string</summary>
@@ -406,13 +408,14 @@ namespace Wochenplaner {
         /// <param name="sender">object sender</param>
         /// <param name="e">event e</param>
         protected void loginBtnClick(object sender, EventArgs e) {
-            string scriptTxt = "openLoginOverlay();";
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "OverlayScript", scriptTxt, true);
+            //string scriptTxt = "openLoginOverlay();";
+            //ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "OverlayScript", scriptTxt, true);
+            //TODO create user object
         }
 
         protected void loginUser(object sender, EventArgs e) {
-            userData.Text = overlayTextBoxLogin.Text;
-            sqlRead();
+            //userData.Text = overlayTextBoxLogin.Text;
+            //sqlRead();
         }
 
         #endregion
@@ -432,6 +435,29 @@ namespace Wochenplaner {
             } catch (Exception ex) {
             }
         }
+
+        /// <summary>
+        /// Reacts to the button click "move"
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void moveAppointment(object sender, EventArgs e) {
+            //string scriptTxt = "openTimeOverlay();";
+            //ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "OverlayScript", scriptTxt, true);
+        }
+
+        /// <summary>
+        /// Reacts to the button click "delete"
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
+        protected void deleteAppointment(object sender, EventArgs e) {
+
+        }
+
+        #endregion
+
+        #region Database Management
 
         /// <summary>
         /// Writes an Appointment into an sql table
@@ -524,25 +550,6 @@ namespace Wochenplaner {
                 ad.TriggerError += new AppointmentCreateEventHandler(ad.playErrorSound);
                 ad._triggerError();
             }
-        }
-
-        /// <summary>
-        /// Reacts to the button click "move"
-        /// </summary>
-        /// <param name="sender">object sender</param>
-        /// <param name="e">event e</param>
-        protected void moveAppointment(object sender, EventArgs e) {
-            string scriptTxt = "openTimeOverlay();";
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "OverlayScript", scriptTxt, true);
-        }
-
-        /// <summary>
-        /// Reacts to the button click "delete"
-        /// </summary>
-        /// <param name="sender">object sender</param>
-        /// <param name="e">event e</param>
-        protected void deleteAppointment(object sender, EventArgs e) {
-
         }
 
         #endregion
