@@ -5,7 +5,7 @@ using System.Web;
 using System.Globalization;
 
 namespace Wochenplaner.App_Code {
-    public class WP_Model {
+    public class WPModel {
         #region Variables
         /// <summary>
         /// Declaration of variables
@@ -28,7 +28,7 @@ namespace Wochenplaner.App_Code {
         /// <summary>
         /// Constructor for the WP_Model class
         /// </summary>
-        internal WP_Model() {
+        internal WPModel() {
             appointmentList = new LinkedList<Appointment>();
         }
 
@@ -122,7 +122,7 @@ namespace Wochenplaner.App_Code {
         /// Method to update the Dates stored in the dates array.
         /// Gets called when the week is changed.
         /// </summary>
-        private void updateDates(){
+        private void updateDates() {
             DateTime jan1 = new DateTime(year, 1, 1);
             int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
 

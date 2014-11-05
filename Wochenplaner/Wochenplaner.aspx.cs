@@ -15,7 +15,7 @@ using Wochenplaner.App_Code;
 namespace Wochenplaner {
     public partial class Wochenplaner: System.Web.UI.Page {
         SqlConnection sqlConnection = new SqlConnection(@"Data Source=(LocalDB)\v11.0;AttachDbFilename=D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\App_Data\WP_DataBase.mdf;Integrated Security=True");
-        WP_model wpm;
+        WPmodel wpm;
 
         protected void Page_Load(object sender, EventArgs e) {
             if (subtitle.Text == "Kalenderwoche") {

@@ -116,9 +116,3 @@ packages/
 
 #Test files
 *.testsettings
-
-# User Settings
-*.dll
-*.pbd
-obj
-bin
