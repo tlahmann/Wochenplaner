@@ -218,13 +218,14 @@ namespace Wochenplaner.App_Code {
         /// <summary>
         /// reads an entry from an sql table
         /// </summary>
-        private Appointment[] sqlRead(UserData _user) {
+        private LinkedList<Appointment> sqlRead(UserData _user) {
             try {
                 sqlConnection.Open();
                 SqlCommand command = new SqlCommand("SELECT * FROM dbo.Appointments", sqlConnection);
                 SqlDataReader reader = command.ExecuteReader();
 
                 Appointment appo = null;
+                LinkedList<Appointment> appoList = new LinkedList<Appointment>();
 
                 while (reader.Read()) {
                     if (reader.GetString(1) == _user.Id) {
@@ -245,6 +246,7 @@ namespace Wochenplaner.App_Code {
                             appo = new Appointment(user, title, startDate);
                         }
 
+                        appoList.AddLast(appo);
                         //paintAppointment(appo);
                         //TODO
                     }
@@ -252,11 +254,12 @@ namespace Wochenplaner.App_Code {
 
                 reader.Close();
 
-                return 
+                return appoList;
             } catch (Exception ex) {
                 AppointmentDelegate ad = new AppointmentDelegate();
                 ad.TriggerError += new AppointmentCreateEventHandler(ad.playErrorSound);
                 ad._triggerError();
+                return null;
             }
         }
 

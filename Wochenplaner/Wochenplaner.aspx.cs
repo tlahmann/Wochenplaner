@@ -7,25 +7,21 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.Configuration;
-using System.Text.RegularExpressions;
 using System.Globalization;
-using System.Data.SqlClient;
+
 using Wochenplaner.App_Code;
 
 namespace Wochenplaner {
     public partial class Wochenplaner: System.Web.UI.Page {
-        SqlConnection sqlConnection = new SqlConnection(@"Data Source=(LocalDB)\v11.0;AttachDbFilename=D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\App_Data\WP_DataBase.mdf;Integrated Security=True");
         WPModel wpm;
         UserData ud;
 
-        //WPModel wp = (WPModel)Session["wpmodel"];
-
         protected void Page_Load(object sender, EventArgs e) {
 
-            if (Session["Wochenplaner"] != null) {
-                userData.Text = Session["Wochenplaner"].ToString();
-                //BodyTag.Style["background-color"] = ColorSelector.SelectedValue;
-            }
+            //if (Session["Wochenplaner"] != null) {
+            //    userData.Text = Session["Wochenplaner"].ToString();
+            //    //BodyTag.Style["background-color"] = ColorSelector.SelectedValue;
+            //}
 
             wpm = new WPModel();
             ud = new UserData();
@@ -71,56 +67,56 @@ namespace Wochenplaner {
         //    return dt;
         //}
 
-        /// <summary>
-        /// Creates date from the given weeknumber in the
-        /// webform</summary>
-        /// <param name="weekOfYear">weeknumber</param>
-        /// <param name="year">year</param>
-        /// <returns>datearray</returns>
-        /// <seealso cref="paintDates(int, int)"> Is used in method paintDate</seealso>
-        public static DateTime getDateFromWeekday(int weekOfYear, int year, string day) {
-            DateTime jan1 = new DateTime(year, 1, 1);
-            int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
+        ///// <summary>
+        ///// Creates date from the given weeknumber in the
+        ///// webform</summary>
+        ///// <param name="weekOfYear">weeknumber</param>
+        ///// <param name="year">year</param>
+        ///// <returns>datearray</returns>
+        ///// <seealso cref="paintDates(int, int)"> Is used in method paintDate</seealso>
+        //public static DateTime getDateFromWeekday(int weekOfYear, int year, string day) {
+        //    DateTime jan1 = new DateTime(year, 1, 1);
+        //    int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
 
-            DateTime firstThursday = jan1.AddDays(daysOffset);
-            var cal = CultureInfo.CurrentCulture.Calendar;
-            int firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        //    DateTime firstThursday = jan1.AddDays(daysOffset);
+        //    var cal = CultureInfo.CurrentCulture.Calendar;
+        //    int firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
-            var weekNum = weekOfYear;
-            if (firstWeek <= 1) {
-                weekNum -= 1;
-            }
-            var result = firstThursday.AddDays(weekNum * 7);
+        //    var weekNum = weekOfYear;
+        //    if (firstWeek <= 1) {
+        //        weekNum -= 1;
+        //    }
+        //    var result = firstThursday.AddDays(weekNum * 7);
 
-            int i = 0;
-            switch (day) {
-                case "MO":
-                    i = -3;
-                    break;
-                case "DI":
-                    i = -2;
-                    break;
-                case "MI":
-                    i = -1;
-                    break;
-                case "DO":
-                    i = 0;
-                    break;
-                case "FR":
-                    i = 1;
-                    break;
-                case "SA":
-                    i = 2;
-                    break;
-                case "SO":
-                    i = 3;
-                    break;
-                default:
-                    break;
-            }
+        //    int i = 0;
+        //    switch (day) {
+        //        case "MO":
+        //            i = -3;
+        //            break;
+        //        case "DI":
+        //            i = -2;
+        //            break;
+        //        case "MI":
+        //            i = -1;
+        //            break;
+        //        case "DO":
+        //            i = 0;
+        //            break;
+        //        case "FR":
+        //            i = 1;
+        //            break;
+        //        case "SA":
+        //            i = 2;
+        //            break;
+        //        case "SO":
+        //            i = 3;
+        //            break;
+        //        default:
+        //            break;
+        //    }
 
-            return result.AddDays(i);
-        }
+        //    return result.AddDays(i);
+        //}
 
         ///// <summary>
         ///// Creates date from the given weeknumber in the
@@ -440,99 +436,6 @@ namespace Wochenplaner {
         #endregion
 
         #region Database Management
-
-        /// <summary>
-        /// Writes an Appointment into an sql table
-        /// </summary>
-        private void sqlWrite(SqlConnection sqlCon) {
-            string cd = Regex.Match(overlayChoosenDate.Text, @"\(([^)]*)\)").Groups[1].Value;
-            int mid = cd.Length / 2;
-            string _day = cd.Substring(0, mid);
-            int _time = Convert.ToInt32(cd.Substring(mid, mid));
-
-            try {
-                // Grap user data and content
-                string user = userData.Text;
-                string title = overlayTextBoxSmall.Text;
-                string desc = overlayTextBoxLarge.Text;
-                int year = getYearnumber();
-                int weekNr = getWeeknumber();
-                int month = new DateTime(year, 1, 1).AddDays(7 * ( weekNr - 1 )).Month;
-                int day = getDateFromWeekday(_day, weekNr, year);
-                DateTime startDate = new DateTime(year, month, day, _time, 00, 00);
-
-                SqlCommand command = new SqlCommand("INSERT INTO appointments VALUES (@USER, @TITLE, @DESC, @STARTDATE, @ENDDATE, @REPEAT)", sqlCon);
-                command.Parameters.AddWithValue("@USER", user);
-                command.Parameters.AddWithValue("@TITLE", title);
-                command.Parameters.AddWithValue("@DESC", desc);
-                command.Parameters.AddWithValue("@STARTDATE", startDate);
-
-                if (cbRepeat.Checked) {
-                    command.Parameters.AddWithValue("@REPEAT", ddRepeat.SelectedIndex);
-                    if (cbEnd.Checked) {
-                        command.Parameters.AddWithValue("@ENDDATE", new DateTime(Convert.ToInt32(textBoxYear.Text), Convert.ToInt32(textBoxMonth.Text), Convert.ToInt32(textBoxDay.Text)));
-                    } else {
-                        command.Parameters.AddWithValue("@ENDDATE", null);
-                    }
-                } else {
-                    command.Parameters.AddWithValue("@REPEAT", null);
-                    command.Parameters.AddWithValue("@ENDDATE", new DateTime(9999, 01, 01, _time, 00, 00));
-                }
-
-                command.ExecuteNonQuery();
-                paintAppointment(cd, title, desc);
-            } catch (Exception ex) {
-                AppointmentDelegate ad = new AppointmentDelegate();
-                ad.TriggerError += new AppointmentCreateEventHandler(ad.playErrorSound);
-                ad._triggerError();
-            }
-        }
-
-        /// <summary>
-        /// reads an entry from an sql table
-        /// </summary>
-        private void sqlRead() {
-            try {
-                sqlConnection.Open();
-
-                SqlCommand command = new SqlCommand("SELECT * FROM dbo.Appointments", sqlConnection);
-                //command.Parameters.AddWithValue("@USER", userData.Text);
-                //command.Parameters.Add("@USER", SqlDbType.NVarChar);
-                //command.Parameters["@USER"].Value = userData.Text;
-
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read()) {
-                    if (reader.GetString(1) == userData.Text) {
-                        string user = reader.GetString(1);
-                        string title = reader.GetString(2);
-                        string desc = reader.GetString(3);
-                        DateTime startDate = reader.GetDateTime(4);
-                        DateTime endDate = reader.GetDateTime(5);
-                        byte repeat = reader.GetByte(6);
-
-                        Appointment appo = null;
-                        if (repeat != null) {
-                            appo = new Appointment(user, title, desc, startDate, endDate, repeat);
-                        } else if (endDate != null) {
-                            appo = new Appointment(user, title, desc, startDate, endDate);
-                        } else if (desc != null) {
-                            appo = new Appointment(user, title, desc, startDate);
-                        } else {
-                            appo = new Appointment(user, title, startDate);
-                        }
-
-                        paintAppointment(appo);
-                    }
-                }
-
-                reader.Close();
-            } catch (Exception ex) {
-                AppointmentDelegate ad = new AppointmentDelegate();
-                ad.TriggerError += new AppointmentCreateEventHandler(ad.playErrorSound);
-                ad._triggerError();
-            }
-        }
 
         #endregion
     }
