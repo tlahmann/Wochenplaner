@@ -10,7 +10,7 @@ namespace Wochenplaner.App_Code {
         /// Declaration of variables
         /// </summary>
         private string id = "abc";
-        public string Id { get { return this.id; } set { this.id = value;} }
+        public string Id { get { return this.id; } set { this.id = value; } }
         private string name;
         public string Name { get { return this.name; } set { this.name = value; } }
         private string password;

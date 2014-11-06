@@ -83,18 +83,5 @@ namespace Wochenplaner.App_Code {
             this.endDate = _endDate;
             this.repeat = _repeat;
         }
-
-        /// <summary>
-        /// Converts the dateTime of an appointment to a short datetime-String of the form DDHH
-        /// </summary>
-        /// <returns>A short dateTime-String</returns>
-        internal string toShortDateTime(){
-            if (this.startDate.Hour > 10) {
-                return this.startDate.ToString("ddd", new CultureInfo("de-DE")) + this.startDate.Hour;
-            } else {
-                return this.startDate.ToString("ddd", new CultureInfo("de-DE")) + "0" + this.startDate.Hour;
-            }
-        }
-
     }
 }

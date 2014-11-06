@@ -91,7 +91,6 @@
     <Compile Include="App_Code\Appointment.cs" />
     <Compile Include="App_Code\AppointmentDelegate.cs" />
     <Compile Include="App_Code\WPModel.cs" />
-    <Content Include="App_Code\UserData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Testing.aspx.cs">
       <DependentUpon>Testing.aspx</DependentUpon>
@@ -100,6 +99,7 @@
     <Compile Include="Testing.aspx.designer.cs">
       <DependentUpon>Testing.aspx</DependentUpon>
     </Compile>
+    <Compile Include="App_Code\UserData.cs" />
     <Compile Include="Wochenplaner.aspx.cs">
       <DependentUpon>Wochenplaner.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

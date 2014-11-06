@@ -16,6 +16,9 @@ namespace Wochenplaner {
     public partial class Wochenplaner: System.Web.UI.Page {
         SqlConnection sqlConnection = new SqlConnection(@"Data Source=(LocalDB)\v11.0;AttachDbFilename=D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\App_Data\WP_DataBase.mdf;Integrated Security=True");
         WPModel wpm;
+        UserData ud;
+
+        //WPModel wp = (WPModel)Session["wpmodel"];
 
         protected void Page_Load(object sender, EventArgs e) {
 
@@ -25,8 +28,12 @@ namespace Wochenplaner {
             }
 
             wpm = new WPModel();
+            ud = new UserData();
+            Session["wpmodel"] = wpm;
+            Session["user"] = ud;
+
             paintWeekNumber(10, DateTime.Now.Year);
-            createRandomUser();
+            
             paintDates(getWeeknumber(DateTime.Now), DateTime.Now.Year);
             disableButtonsOnPageLoad();
             sqlRead();
@@ -115,58 +122,56 @@ namespace Wochenplaner {
             return result.AddDays(i);
         }
 
-        /// <summary>
-        /// Creates date from the given weeknumber in the
-        /// webform</summary>
-        /// <param name="weekOfYear">weeknumber</param>
-        /// <param name="year">year</param>
-        /// <returns>datearray</returns>
-        /// <seealso cref="paintDates(int, int)"> Is used in method paintDate</seealso>
-        public static int getDateFromWeekday(string day, int weekOfYear, int year) {
-            DateTime jan1 = new DateTime(year, 1, 1);
-            int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
+        ///// <summary>
+        ///// Creates date from the given weeknumber in the
+        ///// webform</summary>
+        ///// <param name="weekOfYear">weeknumber</param>
+        ///// <param name="year">year</param>
+        ///// <returns>datearray</returns>
+        ///// <seealso cref="paintDates(int, int)"> Is used in method paintDate</seealso>
+        //public static int getDateFromWeekday(string day, int weekOfYear, int year) {
+        //    DateTime jan1 = new DateTime(year, 1, 1);
+        //    int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
 
-            DateTime firstThursday = jan1.AddDays(daysOffset);
-            var cal = CultureInfo.CurrentCulture.Calendar;
-            int firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        //    DateTime firstThursday = jan1.AddDays(daysOffset);
+        //    var cal = CultureInfo.CurrentCulture.Calendar;
+        //    int firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
-            var weekNum = weekOfYear;
-            if (firstWeek <= 1) {
-                weekNum -= 1;
-            }
-            var result = firstThursday.AddDays(weekNum * 7);
+        //    var weekNum = weekOfYear;
+        //    if (firstWeek <= 1) {
+        //        weekNum -= 1;
+        //    }
+        //    var result = firstThursday.AddDays(weekNum * 7);
 
-            int i = 0;
-            switch (day) {
-                case "MO":
-                    i = -3;
-                    break;
-                case "DI":
-                    i = -2;
-                    break;
-                case "MI":
-                    i = -1;
-                    break;
-                case "DO":
-                    i = 0;
-                    break;
-                case "FR":
-                    i = 1;
-                    break;
-                case "SA":
-                    i = 2;
-                    break;
-                case "SO":
-                    i = 3;
-                    break;
-                default:
-                    break;
-            }
+        //    int i = 0;
+        //    switch (day) {
+        //        case "MO":
+        //            i = -3;
+        //            break;
+        //        case "DI":
+        //            i = -2;
+        //            break;
+        //        case "MI":
+        //            i = -1;
+        //            break;
+        //        case "DO":
+        //            i = 0;
+        //            break;
+        //        case "FR":
+        //            i = 1;
+        //            break;
+        //        case "SA":
+        //            i = 2;
+        //            break;
+        //        case "SO":
+        //            i = 3;
+        //            break;
+        //        default:
+        //            break;
+        //    }
 
-            return result.AddDays(i).Day;
-        }
-
-        
+        //    return result.AddDays(i).Day;
+        //}
 
         ///// <summary>
         ///// getWeeknumber gets the weeknumber from the displayed
@@ -188,40 +193,40 @@ namespace Wochenplaner {
         //    return Convert.ToInt32(words[3]);
         //}
 
-        /// <summary>
-        /// Create a date string from a day and time string</summary>
-        /// <param name="day">day string</param>
-        /// <returns>datestring</returns>
-        private string buildDateString(string day) {
-            string _day = null;
-            switch (day) {
-                case "MO":
-                    _day = "Montag";
-                    break;
-                case "DI":
-                    _day = "Dienstag";
-                    break;
-                case "MI":
-                    _day = "Mittwoch";
-                    break;
-                case "DO":
-                    _day = "Donnerstag";
-                    break;
-                case "FR":
-                    _day = "Freitag";
-                    break;
-                case "SA":
-                    _day = "Samstag";
-                    break;
-                case "SO":
-                    _day = "Sonntag";
-                    break;
-                default:
-                    break;
-            }
+        ///// <summary>
+        ///// Create a date string from a day and time string</summary>
+        ///// <param name="day">day string</param>
+        ///// <returns>datestring</returns>
+        //private string buildDateString(string day) {
+        //    string _day = null;
+        //    switch (day) {
+        //        case "MO":
+        //            _day = "Montag";
+        //            break;
+        //        case "DI":
+        //            _day = "Dienstag";
+        //            break;
+        //        case "MI":
+        //            _day = "Mittwoch";
+        //            break;
+        //        case "DO":
+        //            _day = "Donnerstag";
+        //            break;
+        //        case "FR":
+        //            _day = "Freitag";
+        //            break;
+        //        case "SA":
+        //            _day = "Samstag";
+        //            break;
+        //        case "SO":
+        //            _day = "Sonntag";
+        //            break;
+        //        default:
+        //            break;
+        //    }
 
-            return _day;
-        }
+        //    return _day;
+        //}
 
         #endregion
 
@@ -362,14 +367,6 @@ namespace Wochenplaner {
         }
 
         #endregion
-
-        /// <summary>
-        /// Creates a random String to be used as user login to (teporarily) save
-        /// the entered appointments
-        /// </summary>
-        private void createRandomUser() {
-            
-        }
 
         /// <summary>
         /// Disables the header buttons</summary>
