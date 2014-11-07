@@ -237,9 +237,9 @@ namespace Wochenplaner.App_Code {
                         byte repeat = reader.GetByte(6);
 
                         if (repeat != 0) {
-                            appo = new Appointment(user, title, desc, startDate, endDate, repeat);
+                            appo = new Appointment(user, title, desc, startDate, repeat, endDate);
                         } else if (endDate != null) {
-                            appo = new Appointment(user, title, desc, startDate, endDate);
+                            appo = new Appointment(user, title, desc, startDate, repeat);
                         } else if (desc != null) {
                             appo = new Appointment(user, title, desc, startDate);
                         } else {

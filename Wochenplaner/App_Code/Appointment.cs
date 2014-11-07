@@ -57,13 +57,13 @@ namespace Wochenplaner.App_Code {
         /// <param name="_title">The title of the appointment</param>
         /// <param name="_desc">The description of the appointment</param>
         /// <param name="_startDate">The start dateTime-String of the appointment</param>
-        /// <param name="_endDate">The end dateTime-String of the appointment</param>
-        internal Appointment(string _user, string _title, string _desc, DateTime _startDate, DateTime _endDate) {
+        /// <param name="_repeat">The byte to demetmine the repeat-ratio of the appointment</param>
+        internal Appointment(string _user, string _title, string _desc, DateTime _startDate, byte _repeat) {
             this.user = _user;
             this.title = _title;
             this.description = _desc;
             this.startDate = _startDate;
-            this.endDate = _endDate;
+            this.repeat = _repeat;
         }
 
         /// <summary>
@@ -73,15 +73,15 @@ namespace Wochenplaner.App_Code {
         /// <param name="_title">The title of the appointment</param>
         /// <param name="_desc">The description of the appointment</param>
         /// <param name="_startDate">The start dateTime-String of the appointment</param>
-        /// <param name="_endDate">The end dateTime-String of the appointment</param>
         /// <param name="_repeat">The byte to demetmine the repeat-ratio of the appointment</param>
-        internal Appointment(string _user, string _title, string _desc, DateTime _startDate, DateTime _endDate, byte _repeat) {
+        /// <param name="_endDate">The end dateTime-String of the appointment</param>
+        internal Appointment(string _user, string _title, string _desc, DateTime _startDate, byte _repeat, DateTime _endDate) {
             this.user = _user;
             this.title = _title;
             this.description = _desc;
             this.startDate = _startDate;
-            this.endDate = _endDate;
             this.repeat = _repeat;
+            this.endDate = _endDate;
         }
 
         /// <summary>

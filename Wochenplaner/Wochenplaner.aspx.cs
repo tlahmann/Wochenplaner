@@ -8,6 +8,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.Configuration;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 using Wochenplaner.App_Code;
 
@@ -43,19 +44,19 @@ namespace Wochenplaner {
         internal int weekdayToInt(string _day) {
             switch (_day) {
                 case "MO":
-                    return 1;
+                    return 0;
                 case "DI":
-                    return 2;
+                    return 1;
                 case "MI":
-                    return 3;
+                    return 2;
                 case "DO":
-                    return 4;
+                    return 3;
                 case "FR":
-                    return 5;
+                    return 4;
                 case "SA":
-                    return 6;
+                    return 5;
                 case "SO":
-                    return 7;
+                    return 6;
                 default:
                     return -1;
             }
@@ -106,10 +107,15 @@ namespace Wochenplaner {
             if (Session["wpmodel"] != null) {
                 wpm = (WPModel)Session["wpmodel"];
             }
-
+            string _t = null;
+            if (_time < 10) {
+                _t = "0" + _time;
+            } else {
+                _t = _time.ToString();
+            }
             string scriptTxt = "openInputOverlay();";
             ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "OverlayScript", scriptTxt, true);
-            overlayChoosenDate.Text = "Zeit: " + wpm.getLongWeekday(weekdayToInt(_day)) + ", " + wpm.Dates[weekdayToInt(_day)].ToShortDateString() + " um " + _time + ":00 Uhr";
+            overlayChoosenDate.Text = "Zeit: " + wpm.getLongWeekday(weekdayToInt(_day)) + ", " + wpm.Dates[weekdayToInt(_day)].ToShortDateString() + " um " + _t + ":00 Uhr (" + _day + _t + ")";
         }
 
         /// <summary>
@@ -251,24 +257,28 @@ namespace Wochenplaner {
                 wpm = (WPModel)Session["wpmodel"];
                 Appointment appo = null;
 
-                string user = overlayTextBoxLarge.t;
-                string title = reader.GetString(2);
-                string desc = reader.GetString(3);
-                DateTime startDate = reader.GetDateTime(4);
-                DateTime endDate = reader.GetDateTime(5);
-                byte repeat = reader.GetByte(6);
+                string user = overlayTextBoxLogin.Text;
+                string title = overlayTextBoxSmall.Text;
+                string desc = overlayTextBoxLarge.Text;
 
-                if (repeat != 0) {
-                    appo = new Appointment(user, title, desc, startDate, endDate, repeat);
-                } else if (endDate != null) {
-                    appo = new Appointment(user, title, desc, startDate, endDate);
+                string cd = Regex.Match(overlayChoosenDate.Text, @"\(([^)]*)\)").Groups[1].Value;
+                int mid = cd.Length / 2;
+                string _day = cd.Substring(0, mid);
+                int _time = Convert.ToInt32(cd.Substring(mid, mid));
+
+                DateTime startDate = wpm.Dates[weekdayToInt(_day)].AddHours(_time);
+
+                if (cbEnd.Checked) {
+                    appo = new Appointment(user, title, desc, startDate, (byte)ddRepeat.SelectedIndex, new DateTime(Convert.ToInt32(textBoxYear), Convert.ToInt32(textBoxMonth), Convert.ToInt32(textBoxDay), _time, 00, 00));
+                } else if (cbRepeat.Checked) {
+                    appo = new Appointment(user, title, desc, startDate, (byte)ddRepeat.SelectedIndex);
                 } else if (desc != null) {
                     appo = new Appointment(user, title, desc, startDate);
                 } else {
                     appo = new Appointment(user, title, startDate);
                 }
 
-                wpm.sqlWrite();
+                wpm.sqlWrite(appo);
             }
         }
 
