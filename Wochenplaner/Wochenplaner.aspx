@@ -10,7 +10,7 @@
     <meta name="keywords" content="Wochenplaner, Terminkalender, Organisation" />
     <meta name="date" content="2014-10-14" />
     <link rel="stylesheet" type="text/css" href="StyleSheets/style.css" />
-    <title>Wochenplaner v 0.10</title>
+    <title>Wochenplaner v 0.11</title>
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="Scripts/WP_MainScript.js"></script>
 </head>

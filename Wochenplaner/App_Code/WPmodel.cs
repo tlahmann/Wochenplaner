@@ -184,16 +184,16 @@ namespace Wochenplaner.App_Code {
         /// <summary>
         /// Writes an Appointment into an sql table
         /// </summary>
-        private void sqlWrite(Appointment _appo) {
+        public void sqlWrite(Appointment _appo) {
             try {
-                //sqlConnection.Open();
-                SqlCommand command = new SqlCommand("INSERT INTO appointments VALUES (@USER, @TITLE, @DESC, @STARTDATE, @ENDDATE, @REPEAT)", sqlCon);
+                sqlConnection.Open();
+                SqlCommand command = new SqlCommand("INSERT INTO appointments VALUES (@USER, @TITLE, @DESC, @STARTDATE, @ENDDATE, @REPEAT)", sqlConnection);
                 command.Parameters.AddWithValue("@USER", _appo.User);
                 command.Parameters.AddWithValue("@TITLE", _appo.Title);
                 command.Parameters.AddWithValue("@DESC", _appo.Description);
                 command.Parameters.AddWithValue("@STARTDATE", _appo.StartDate);
 
-                if (_appo.Repeat != null) {
+                if (_appo.Repeat != 0) {
                     command.Parameters.AddWithValue("@REPEAT", _appo.Repeat);
                     if (_appo.EndDate != null) {
                         command.Parameters.AddWithValue("@ENDDATE", _appo.EndDate);
@@ -236,7 +236,7 @@ namespace Wochenplaner.App_Code {
                         DateTime endDate = reader.GetDateTime(5);
                         byte repeat = reader.GetByte(6);
 
-                        if (repeat != null) {
+                        if (repeat != 0) {
                             appo = new Appointment(user, title, desc, startDate, endDate, repeat);
                         } else if (endDate != null) {
                             appo = new Appointment(user, title, desc, startDate, endDate);
@@ -253,8 +253,8 @@ namespace Wochenplaner.App_Code {
                 }
 
                 reader.Close();
-
                 return appoList;
+
             } catch (Exception ex) {
                 AppointmentDelegate ad = new AppointmentDelegate();
                 ad.TriggerError += new AppointmentCreateEventHandler(ad.playErrorSound);

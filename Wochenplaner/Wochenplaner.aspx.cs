@@ -17,212 +17,49 @@ namespace Wochenplaner {
         UserData ud;
 
         protected void Page_Load(object sender, EventArgs e) {
+            if (Session["wpmodel"] == null) {
+                wpm = new WPModel();
+                Session["wpmodel"] = wpm;
+            } else {
+                wpm = (WPModel)Session["wpmodel"];
+            }
+            if (Session["user"] == null) {
+                ud = new UserData();
+                Session["user"] = ud;
+            } else {
+                ud = (UserData)Session["user"];
+            }
 
-            //if (Session["Wochenplaner"] != null) {
-            //    userData.Text = Session["Wochenplaner"].ToString();
-            //    //BodyTag.Style["background-color"] = ColorSelector.SelectedValue;
-            //}
+            paintWeekNumber(wpm.Week, wpm.Year);
+            paintDates();
 
-            wpm = new WPModel();
-            ud = new UserData();
-            Session["wpmodel"] = wpm;
-            Session["user"] = ud;
-
-            paintWeekNumber(10, DateTime.Now.Year);
-            
-            paintDates(getWeeknumber(DateTime.Now), DateTime.Now.Year);
             disableButtonsOnPageLoad();
-            sqlRead();
         }
 
         #region Design
 
         #region DateManagement
 
-        ///// <summary>
-        ///// Creates dates array to display the dates from the given weeknumber in the
-        ///// webform</summary>
-        ///// <param name="weekOfYear">weeknumber</param>
-        ///// <param name="year">year</param>
-        ///// <returns>datearray</returns>
-        ///// <seealso cref="paintDates(int, int)"> Is used in method paintDate</seealso>
-        //public static DateTime[] getDatesFromWeekNumber(int weekOfYear, int year) {
-        //    DateTime jan1 = new DateTime(year, 1, 1);
-        //    int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
-
-        //    DateTime firstThursday = jan1.AddDays(daysOffset);
-        //    var cal = CultureInfo.CurrentCulture.Calendar;
-        //    int firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-
-        //    var weekNum = weekOfYear;
-        //    if (firstWeek <= 1) {
-        //        weekNum -= 1;
-        //    }
-        //    var result = firstThursday.AddDays(( weekNum * 7 ) - 4);
-        //    DateTime[] dt = new DateTime[7];
-        //    for (int i = 0; i < 7; i++) {
-        //        dt[i] = result.AddDays(1);
-        //        result = result.AddDays(1);
-        //    }
-        //    return dt;
-        //}
-
-        ///// <summary>
-        ///// Creates date from the given weeknumber in the
-        ///// webform</summary>
-        ///// <param name="weekOfYear">weeknumber</param>
-        ///// <param name="year">year</param>
-        ///// <returns>datearray</returns>
-        ///// <seealso cref="paintDates(int, int)"> Is used in method paintDate</seealso>
-        //public static DateTime getDateFromWeekday(int weekOfYear, int year, string day) {
-        //    DateTime jan1 = new DateTime(year, 1, 1);
-        //    int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
-
-        //    DateTime firstThursday = jan1.AddDays(daysOffset);
-        //    var cal = CultureInfo.CurrentCulture.Calendar;
-        //    int firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-
-        //    var weekNum = weekOfYear;
-        //    if (firstWeek <= 1) {
-        //        weekNum -= 1;
-        //    }
-        //    var result = firstThursday.AddDays(weekNum * 7);
-
-        //    int i = 0;
-        //    switch (day) {
-        //        case "MO":
-        //            i = -3;
-        //            break;
-        //        case "DI":
-        //            i = -2;
-        //            break;
-        //        case "MI":
-        //            i = -1;
-        //            break;
-        //        case "DO":
-        //            i = 0;
-        //            break;
-        //        case "FR":
-        //            i = 1;
-        //            break;
-        //        case "SA":
-        //            i = 2;
-        //            break;
-        //        case "SO":
-        //            i = 3;
-        //            break;
-        //        default:
-        //            break;
-        //    }
-
-        //    return result.AddDays(i);
-        //}
-
-        ///// <summary>
-        ///// Creates date from the given weeknumber in the
-        ///// webform</summary>
-        ///// <param name="weekOfYear">weeknumber</param>
-        ///// <param name="year">year</param>
-        ///// <returns>datearray</returns>
-        ///// <seealso cref="paintDates(int, int)"> Is used in method paintDate</seealso>
-        //public static int getDateFromWeekday(string day, int weekOfYear, int year) {
-        //    DateTime jan1 = new DateTime(year, 1, 1);
-        //    int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
-
-        //    DateTime firstThursday = jan1.AddDays(daysOffset);
-        //    var cal = CultureInfo.CurrentCulture.Calendar;
-        //    int firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-
-        //    var weekNum = weekOfYear;
-        //    if (firstWeek <= 1) {
-        //        weekNum -= 1;
-        //    }
-        //    var result = firstThursday.AddDays(weekNum * 7);
-
-        //    int i = 0;
-        //    switch (day) {
-        //        case "MO":
-        //            i = -3;
-        //            break;
-        //        case "DI":
-        //            i = -2;
-        //            break;
-        //        case "MI":
-        //            i = -1;
-        //            break;
-        //        case "DO":
-        //            i = 0;
-        //            break;
-        //        case "FR":
-        //            i = 1;
-        //            break;
-        //        case "SA":
-        //            i = 2;
-        //            break;
-        //        case "SO":
-        //            i = 3;
-        //            break;
-        //        default:
-        //            break;
-        //    }
-
-        //    return result.AddDays(i).Day;
-        //}
-
-        ///// <summary>
-        ///// getWeeknumber gets the weeknumber from the displayed
-        ///// week-string (asp - header)
-        ///// <returns>weeknumber of the shown time</returns>
-        //private int getWeeknumber() {
-        //    string[] words = subtitle.Text.Split(' ');
-
-        //    return Convert.ToInt32(words[1]);
-        //}
-
-        ///// <summary>
-        ///// <c>getWeeknumber</c> gets the yearnumber from the displayed
-        ///// week-string (asp - header)
-        ///// <returns>yearnumber of the shown time</returns>
-        //private int getYearnumber() {
-        //    string[] words = subtitle.Text.Split(' ');
-
-        //    return Convert.ToInt32(words[3]);
-        //}
-
-        ///// <summary>
-        ///// Create a date string from a day and time string</summary>
-        ///// <param name="day">day string</param>
-        ///// <returns>datestring</returns>
-        //private string buildDateString(string day) {
-        //    string _day = null;
-        //    switch (day) {
-        //        case "MO":
-        //            _day = "Montag";
-        //            break;
-        //        case "DI":
-        //            _day = "Dienstag";
-        //            break;
-        //        case "MI":
-        //            _day = "Mittwoch";
-        //            break;
-        //        case "DO":
-        //            _day = "Donnerstag";
-        //            break;
-        //        case "FR":
-        //            _day = "Freitag";
-        //            break;
-        //        case "SA":
-        //            _day = "Samstag";
-        //            break;
-        //        case "SO":
-        //            _day = "Sonntag";
-        //            break;
-        //        default:
-        //            break;
-        //    }
-
-        //    return _day;
-        //}
+        internal int weekdayToInt(string _day) {
+            switch (_day) {
+                case "MO":
+                    return 1;
+                case "DI":
+                    return 2;
+                case "MI":
+                    return 3;
+                case "DO":
+                    return 4;
+                case "FR":
+                    return 5;
+                case "SA":
+                    return 6;
+                case "SO":
+                    return 7;
+                default:
+                    return -1;
+            }
+        }
 
         #endregion
 
@@ -248,16 +85,15 @@ namespace Wochenplaner {
                 }
             }
 
-            // Find control on page.
-            Button chosenButton = (Button)FindControl(_appo.toShortDateTime());
-
+            //Find control on page.
+            Button chosenButton = (Button)FindControl(_appo.getShortWeekday() + _appo.StartDate.Hour);
             if (chosenButton != null) {
                 if (_desc != null) {
                     chosenButton.Text = _title + Environment.NewLine + _desc;
                 } else {
                     chosenButton.Text = _title;
                 }
-                chosenButton.BackColor = Color.FromArgb(255, 236, 220); // Paints the button in a other color to shot that an Appointment is present
+                chosenButton.BackColor = Color.FromArgb(170, 117, 57); // Paints the button in a other color to shot that an Appointment is present
             } else {
             }
         }
@@ -266,10 +102,14 @@ namespace Wochenplaner {
         /// Fades in the overlay for the appointment creation.</summary>
         /// <param name="dateTime">datetime takes a string containing the date and time where to create the
         /// appointment</param>
-        public void fadeInOverlay(string weekday, DateTime date, string time, string buttonCode) {
+        public void fadeInOverlay(string _day, int _time) {
+            if (Session["wpmodel"] != null) {
+                wpm = (WPModel)Session["wpmodel"];
+            }
+
             string scriptTxt = "openInputOverlay();";
             ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "OverlayScript", scriptTxt, true);
-            overlayChoosenDate.Text = "Zeit: " + weekday + ", " + date.ToShortDateString() + " um " + time + ":00 Uhr (" + buttonCode + ")";
+            overlayChoosenDate.Text = "Zeit: " + wpm.getLongWeekday(weekdayToInt(_day)) + ", " + wpm.Dates[weekdayToInt(_day)].ToShortDateString() + " um " + _time + ":00 Uhr";
         }
 
         /// <summary>
@@ -280,8 +120,8 @@ namespace Wochenplaner {
             Button bt = (Button)sender;
             int mid = bt.ID.Length / 2;
             string day = bt.ID.Substring(0, mid);
-            string time = bt.ID.Substring(mid, mid);
-            fadeInOverlay(buildDateString(day), getDateFromWeekday(getWeeknumber(), getYearnumber(), day), time, bt.ID);
+            int time = Convert.ToInt32(bt.ID.Substring(mid, mid));
+            fadeInOverlay(day, time);
         }
 
         /// <summary>
@@ -289,7 +129,7 @@ namespace Wochenplaner {
         /// <param name="sender">sender object</param>
         /// <param name="e">Event Argument</param>
         protected void closeOverlay(object sender, EventArgs e) {
-
+            //TODO
         }
 
         /// <summary>
@@ -304,8 +144,11 @@ namespace Wochenplaner {
         /// Displays the dates of the chosen week number.</summary>
         /// <param name="weekNr">weekNr takes the week number to display</param>
         /// <param name="year">year takes the year to display</param>
-        private void paintDates(int weekNr, int year) {
-            DateTime[] dt = getDatesFromWeekNumber(weekNr, year);
+        private void paintDates() {
+            if (Session["Wochenplaner"] != null) {
+                wpm = (WPModel)Session["Wochenplaner"];
+            }
+            DateTime[] dt = wpm.Dates;
             bt1.Text = "Montag" + Environment.NewLine + dt[0].ToShortDateString().ToString();
             bt2.Text = "Dienstag" + Environment.NewLine + dt[1].ToShortDateString().ToString();
             bt3.Text = "Mittwoch" + Environment.NewLine + dt[2].ToShortDateString().ToString();
@@ -321,17 +164,15 @@ namespace Wochenplaner {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         protected void moveWeekBackwards(object sender, EventArgs e) {
-            string[] words = subtitle.Text.Split(' ');
-            int week = Convert.ToInt32(words[1]);
-            int year = Convert.ToInt32(words[3]);
-            if (week <= 1) {
-                week = 52;
-                year -= 1;
+            wpm = (WPModel)Session["wpmodel"];
+            if (wpm.Week <= 1) {
+                wpm.Week = 52;
+                wpm.Year -= 1;
             } else {
-                week -= 1;
+                wpm.Week -= 1;
             }
-            paintWeekNumber(week, year);
-            paintDates(week, year);
+            paintWeekNumber(wpm.Week, wpm.Year);
+            paintDates();
         }
 
         /// <summary>
@@ -340,17 +181,15 @@ namespace Wochenplaner {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         protected void moveWeekForwards(object sender, EventArgs e) {
-            string[] words = subtitle.Text.Split(' ');
-            int week = Convert.ToInt32(words[1]);
-            int year = Convert.ToInt32(words[3]);
-            if (week >= 52) {
-                week = 1;
-                year += 1;
+            wpm = (WPModel)Session["wpmodel"];
+            if (wpm.Week >= 52) {
+                wpm.Week = 1;
+                wpm.Year += 1;
             } else {
-                week += 1;
+                wpm.Week += 1;
             }
-            paintWeekNumber(week, year);
-            paintDates(week, year);
+            paintWeekNumber(wpm.Week, wpm.Year);
+            paintDates();
         }
 
         /// <summary>
@@ -365,7 +204,8 @@ namespace Wochenplaner {
         #endregion
 
         /// <summary>
-        /// Disables the header buttons</summary>
+        /// Disables the header buttons
+        /// </summary>
         private void disableButtonsOnPageLoad() {
             this.bt1.Enabled = false;
             this.bt2.Enabled = false;
@@ -407,10 +247,28 @@ namespace Wochenplaner {
         /// <param name="sender">object sender</param>
         /// <param name="e">event e</param>
         protected void createAppointment(object sender, EventArgs e) {
-            try {
-                sqlConnection.Open();
-                sqlWrite(sqlConnection);
-            } catch (Exception ex) {
+            if (Session["wpmodel"] != null) {
+                wpm = (WPModel)Session["wpmodel"];
+                Appointment appo = null;
+
+                string user = overlayTextBoxLarge.t;
+                string title = reader.GetString(2);
+                string desc = reader.GetString(3);
+                DateTime startDate = reader.GetDateTime(4);
+                DateTime endDate = reader.GetDateTime(5);
+                byte repeat = reader.GetByte(6);
+
+                if (repeat != 0) {
+                    appo = new Appointment(user, title, desc, startDate, endDate, repeat);
+                } else if (endDate != null) {
+                    appo = new Appointment(user, title, desc, startDate, endDate);
+                } else if (desc != null) {
+                    appo = new Appointment(user, title, desc, startDate);
+                } else {
+                    appo = new Appointment(user, title, startDate);
+                }
+
+                wpm.sqlWrite();
             }
         }
 
@@ -435,8 +293,5 @@ namespace Wochenplaner {
 
         #endregion
 
-        #region Database Management
-
-        #endregion
     }
 }

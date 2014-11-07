@@ -83,5 +83,13 @@ namespace Wochenplaner.App_Code {
             this.endDate = _endDate;
             this.repeat = _repeat;
         }
+
+        /// <summary>
+        /// Converts the dateTime of an appointment to a short datetime-String
+        /// </summary>
+        /// <returns>A short dateTime-String</returns>
+        internal string getShortWeekday() {
+            return this.startDate.ToString("ddd");
+        }
     }
 }
