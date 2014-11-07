@@ -192,22 +192,11 @@ namespace Wochenplaner.App_Code {
                 command.Parameters.AddWithValue("@TITLE", _appo.Title);
                 command.Parameters.AddWithValue("@DESC", _appo.Description);
                 command.Parameters.AddWithValue("@STARTDATE", _appo.StartDate);
-
-                if (_appo.Repeat != 0) {
-                    command.Parameters.AddWithValue("@REPEAT", _appo.Repeat);
-                    if (_appo.EndDate != null) {
-                        command.Parameters.AddWithValue("@ENDDATE", _appo.EndDate);
-                    } else {
-                        command.Parameters.AddWithValue("@ENDDATE", null);
-                    }
-                } else {
-                    command.Parameters.AddWithValue("@REPEAT", null);
-                    command.Parameters.AddWithValue("@ENDDATE", null);
-                }
+                command.Parameters.AddWithValue("@REPEAT", _appo.Repeat);
+                command.Parameters.AddWithValue("@ENDDATE", _appo.EndDate);
 
                 command.ExecuteNonQuery();
-                //paintAppointment(cd, title, desc); 
-                // TODO
+
             } catch (Exception ex) {
                 AppointmentDelegate ad = new AppointmentDelegate();
                 ad.TriggerError += new AppointmentCreateEventHandler(ad.playErrorSound);

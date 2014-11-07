@@ -85,16 +85,22 @@ namespace Wochenplaner {
                     _desc = _appo.Description;
                 }
             }
+            string h = null;
+            if (_appo.StartDate.Hour < 10) {
+                h = "0" + _appo.StartDate.Hour;
+            } else {
+                h = _appo.StartDate.Hour.ToString();
+            }
 
             //Find control on page.
-            Button chosenButton = (Button)FindControl(_appo.getShortWeekday() + _appo.StartDate.Hour);
+            Button chosenButton = (Button)FindControl(_appo.getShortWeekday() + h);
             if (chosenButton != null) {
                 if (_desc != null) {
                     chosenButton.Text = _title + Environment.NewLine + _desc;
                 } else {
                     chosenButton.Text = _title;
                 }
-                chosenButton.BackColor = Color.FromArgb(170, 117, 57); // Paints the button in a other color to shot that an Appointment is present
+                chosenButton.BackColor = Color.FromArgb(154, 204, 206); // Paints the button in a other color to shot that an Appointment is present
             } else {
             }
         }
@@ -135,7 +141,7 @@ namespace Wochenplaner {
         /// <param name="sender">sender object</param>
         /// <param name="e">Event Argument</param>
         protected void closeOverlay(object sender, EventArgs e) {
-            //TODO
+            //TODO?
         }
 
         /// <summary>
@@ -232,14 +238,17 @@ namespace Wochenplaner {
         /// <param name="sender">object sender</param>
         /// <param name="e">event e</param>
         protected void loginBtnClick(object sender, EventArgs e) {
-            //string scriptTxt = "openLoginOverlay();";
-            //ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "OverlayScript", scriptTxt, true);
-            //TODO create user object
+            string scriptTxt = "openLoginOverlay();";
+            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "OverlayScript", scriptTxt, true);
         }
 
         protected void loginUser(object sender, EventArgs e) {
-            //userData.Text = overlayTextBoxLogin.Text;
-            //sqlRead();
+            userData.Text = overlayTextBoxLogin.Text;
+            if (Session["user"] != null) {
+                ud.Name = overlayTextBoxLogin.Text;
+            }
+
+            // TODO react when username changes
         }
 
         #endregion
@@ -255,9 +264,12 @@ namespace Wochenplaner {
         protected void createAppointment(object sender, EventArgs e) {
             if (Session["wpmodel"] != null) {
                 wpm = (WPModel)Session["wpmodel"];
+                if (Session["wpmodel"] != null) {
+                    ud = (UserData)Session["user"];
+                }
                 Appointment appo = null;
 
-                string user = overlayTextBoxLogin.Text;
+                string user = ud.Id;
                 string title = overlayTextBoxSmall.Text;
                 string desc = overlayTextBoxLarge.Text;
 
@@ -269,16 +281,17 @@ namespace Wochenplaner {
                 DateTime startDate = wpm.Dates[weekdayToInt(_day)].AddHours(_time);
 
                 if (cbEnd.Checked) {
-                    appo = new Appointment(user, title, desc, startDate, (byte)ddRepeat.SelectedIndex, new DateTime(Convert.ToInt32(textBoxYear), Convert.ToInt32(textBoxMonth), Convert.ToInt32(textBoxDay), _time, 00, 00));
+                    appo = new Appointment(user, title, desc, startDate, (byte)ddRepeat.SelectedIndex, new DateTime(Convert.ToInt32(textBoxYear.Text), Convert.ToInt32(textBoxMonth.Text), Convert.ToInt32(textBoxDay.Text), _time, 00, 00));
                 } else if (cbRepeat.Checked) {
-                    appo = new Appointment(user, title, desc, startDate, (byte)ddRepeat.SelectedIndex);
+                    appo = new Appointment(user, title, desc, startDate, (byte)ddRepeat.SelectedIndex, new DateTime(9999, 12, 31));
                 } else if (desc != null) {
-                    appo = new Appointment(user, title, desc, startDate);
+                    appo = new Appointment(user, title, desc, startDate, (byte)6, new DateTime(9999, 12, 31));
                 } else {
-                    appo = new Appointment(user, title, startDate);
+                    appo = new Appointment(user, title, null, startDate, (byte)6, new DateTime(9999, 12, 31));
                 }
 
                 wpm.sqlWrite(appo);
+                paintAppointment(appo);
             }
         }
 
