@@ -74,6 +74,11 @@ namespace Wochenplaner.App_Code {
             }
         }
 
+        internal Appointment getAppointment(DateTime _dt) {
+            appointmentList.Find(new Appointment(null, null, _dt));
+            return null;
+        }
+
         /// <summary>
         /// Changes the title of the appointment
         /// </summary>
@@ -193,7 +198,9 @@ namespace Wochenplaner.App_Code {
         /// </summary>
         public void sqlWriteAppointments(Appointment _appo) {
             try {
-                sqlConnection.Open();
+                if (sqlConnection != null && sqlConnection.State == System.Data.ConnectionState.Closed) {
+                    sqlConnection.Open();
+                }
                 SqlCommand command = new SqlCommand("INSERT INTO appointments VALUES (@USER, @TITLE, @DESC, @STARTDATE, @ENDDATE, @REPEAT)", sqlConnection);
                 command.Parameters.AddWithValue("@USER", _appo.User);
                 command.Parameters.AddWithValue("@TITLE", _appo.Title);
@@ -212,11 +219,13 @@ namespace Wochenplaner.App_Code {
         }
 
         /// <summary>
-        /// reads an entry from an sql table
+        /// reads an appointment entry from an sql table
         /// </summary>
-        public void sqlReadAppointments(UserData _user) {
+        public void sqlReadAppointments() {
             try {
-                sqlConnection.Open();
+                if (sqlConnection != null && sqlConnection.State == System.Data.ConnectionState.Closed) {
+                    sqlConnection.Open();
+                }
                 SqlCommand command = new SqlCommand("SELECT * FROM dbo.Appointments", sqlConnection);
                 SqlDataReader reader = command.ExecuteReader();
 
@@ -224,8 +233,8 @@ namespace Wochenplaner.App_Code {
                 LinkedList<Appointment> appoList = new LinkedList<Appointment>();
 
                 while (reader.Read()) {
-                    if (reader.GetString(1) == _user.Id) {
-                        string user = reader.GetString(1);
+                    if (reader.GetString(1) == user.Id) {
+                        string _user = reader.GetString(1);
                         string title = reader.GetString(2);
                         string desc = reader.GetString(3);
                         DateTime startDate = reader.GetDateTime(4);
@@ -233,13 +242,13 @@ namespace Wochenplaner.App_Code {
                         byte repeat = reader.GetByte(6);
 
                         if (repeat != 0) {
-                            appo = new Appointment(user, title, desc, startDate, repeat, endDate);
+                            appo = new Appointment(_user, title, desc, startDate, repeat, endDate);
                         } else if (endDate != null) {
-                            appo = new Appointment(user, title, desc, startDate, repeat);
+                            appo = new Appointment(_user, title, desc, startDate, repeat);
                         } else if (desc != null) {
-                            appo = new Appointment(user, title, desc, startDate);
+                            appo = new Appointment(_user, title, desc, startDate);
                         } else {
-                            appo = new Appointment(user, title, startDate);
+                            appo = new Appointment(_user, title, startDate);
                         }
 
                         appoList.AddLast(appo);
@@ -257,15 +266,17 @@ namespace Wochenplaner.App_Code {
         }
 
         /// <summary>
-        /// Writes an Appointment into an sql table
+        /// Writes an user into an sql table
         /// </summary>
         public void sqlWriteUser(UserData _user) {
             try {
-                sqlConnection.Open();
+                if (sqlConnection != null && sqlConnection.State == System.Data.ConnectionState.Closed) {
+                    sqlConnection.Open();
+                }
                 SqlCommand command = new SqlCommand("INSERT INTO users VALUES (@USER, @NAME, @PASSWORD)", sqlConnection);
                 command.Parameters.AddWithValue("@USER", _user.Id);
                 command.Parameters.AddWithValue("@NAME", _user.Name);
-                command.Parameters.AddWithValue("@PASSWORD", _user.Password);
+                command.Parameters.AddWithValue("@PASSWORD", DBNull.Value);
 
                 command.ExecuteNonQuery();
 
@@ -277,7 +288,7 @@ namespace Wochenplaner.App_Code {
         }
 
         /// <summary>
-        /// reads an entry from an sql table
+        /// reads an user entry from an sql table
         /// </summary>
         public void sqlReadUser(string _name) {
             try {
@@ -301,6 +312,9 @@ namespace Wochenplaner.App_Code {
                 }
 
                 reader.Close();
+                if (user.Name != null) {
+                    sqlReadAppointments();
+                }
 
             } catch (Exception ex) {
                 AppointmentDelegate ad = new AppointmentDelegate();

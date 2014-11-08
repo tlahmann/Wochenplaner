@@ -22,10 +22,10 @@ namespace Wochenplaner {
                 Session["wpmodel"] = wpm;
             } else {
                 wpm = (WPModel)Session["wpmodel"];
-                wpm.sqlReadAppointments(wpm.User);
-                paintAppointments(wpm.AppointmentList);
+                wpm.sqlReadAppointments();
+                paintAppointments();
             }
-            
+
 
             paintWeekNumber(wpm.Week, wpm.Year);
             paintDates();
@@ -105,8 +105,8 @@ namespace Wochenplaner {
         /// shows the appointment on the website
         /// </summary>
         /// <param name="_appo">An appointment to show</param>
-        private void paintAppointments(LinkedList<Appointment> _appos) {
-            foreach (Appointment _appo in _appos) {
+        private void paintAppointments() {
+            foreach (Appointment _appo in wpm.AppointmentList) {
                 string _title;
                 string _desc = null;
                 if (_appo.Title.Length > 10) {
@@ -138,7 +138,7 @@ namespace Wochenplaner {
                     }
                     chosenButton.BackColor = Color.FromArgb(255, 248, 242); // Paints the button in a other color to shot that an Appointment is present
                 } else {
-                } 
+                }
             }
         }
 
@@ -159,6 +159,7 @@ namespace Wochenplaner {
             string scriptTxt = "openInputOverlay();";
             ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "OverlayScript", scriptTxt, true);
             overlayChoosenDate.Text = "Zeit: " + wpm.getLongWeekday(weekdayToInt(_day)) + ", " + wpm.Dates[weekdayToInt(_day)].ToShortDateString() + " um " + _t + ":00 Uhr (" + _day + _t + ")";
+
         }
 
         /// <summary>
@@ -171,6 +172,7 @@ namespace Wochenplaner {
             string day = bt.ID.Substring(0, mid);
             int time = Convert.ToInt32(bt.ID.Substring(mid, mid));
             fadeInOverlay(day, time);
+            overlayAppointmentRepresentation(bt, day, time);
         }
 
         /// <summary>
@@ -179,6 +181,31 @@ namespace Wochenplaner {
         /// <param name="e">Event Argument</param>
         protected void closeOverlay(object sender, EventArgs e) {
             //TODO?
+        }
+
+        protected void overlayAppointmentRepresentation(Button _bt, string _day, int _time) {
+            DateTime startDate = wpm.Dates[weekdayToInt(_day)].AddHours(_time);
+            if(_bt.Text != ""){
+                wpm.getAppointment(startDate);
+                overlayTextBoxSmall.Text = "";
+                overlayTextBoxLarge.Text = "";
+                cbRepeat.Checked = false;
+                ddRepeat.SelectedIndex = 0;
+                cbRepeat.Checked = false;
+                textBoxYear.Text = "";
+                textBoxMonth.Text = "";
+                textBoxDay.Text = "";
+            }
+            else{
+                overlayTextBoxSmall.Text = "";
+                overlayTextBoxLarge.Text = "";
+                cbRepeat.Checked = false;
+                ddRepeat.SelectedIndex = 0;
+                cbRepeat.Checked = false;
+                textBoxYear.Text = "";
+                textBoxMonth.Text = "";
+                textBoxDay.Text = "";
+            }
         }
 
         /// <summary>
@@ -280,13 +307,23 @@ namespace Wochenplaner {
         }
 
         protected void loginUser(object sender, EventArgs e) {
-            userData.Text = overlayTextBoxLogin.Text;
-            if (Session["wpmodel"] != null) {
-                wpm = (WPModel)Session["wpmodel"];
-            }
-            wpm.sqlReadUser(overlayTextBoxLogin.Text);
+            if (overlayTextBoxLogin.Text != "") {
+                userData.Text = overlayTextBoxLogin.Text;
+                if (Session["wpmodel"] != null) {
+                    wpm = (WPModel)Session["wpmodel"];
+                }
+                wpm.sqlReadUser(overlayTextBoxLogin.Text);
 
-            // TODO react when username changes
+                if (wpm.User.Name == null) {
+                    wpm.sqlWriteUser(registerNewUser());
+                } else {
+                    paintAppointments();
+                }
+            }
+        }
+
+        protected UserData registerNewUser() {
+            return new UserData(overlayTextBoxLogin.Text);
         }
 
         #endregion
