@@ -15,7 +15,6 @@ using Wochenplaner.App_Code;
 namespace Wochenplaner {
     public partial class Wochenplaner: System.Web.UI.Page {
         WPModel wpm;
-        UserData ud;
 
         protected void Page_Load(object sender, EventArgs e) {
             if (Session["wpmodel"] == null) {
@@ -23,13 +22,10 @@ namespace Wochenplaner {
                 Session["wpmodel"] = wpm;
             } else {
                 wpm = (WPModel)Session["wpmodel"];
+                wpm.sqlReadAppointments(wpm.User);
+                paintAppointments(wpm.AppointmentList);
             }
-            if (Session["user"] == null) {
-                ud = new UserData();
-                Session["user"] = ud;
-            } else {
-                ud = (UserData)Session["user"];
-            }
+            
 
             paintWeekNumber(wpm.Week, wpm.Year);
             paintDates();
@@ -100,8 +96,49 @@ namespace Wochenplaner {
                 } else {
                     chosenButton.Text = _title;
                 }
-                chosenButton.BackColor = Color.FromArgb(154, 204, 206); // Paints the button in a other color to shot that an Appointment is present
+                chosenButton.BackColor = Color.FromArgb(255, 248, 242); // Paints the button in a other color to shot that an Appointment is present
             } else {
+            }
+        }
+
+        /// <summary>
+        /// shows the appointment on the website
+        /// </summary>
+        /// <param name="_appo">An appointment to show</param>
+        private void paintAppointments(LinkedList<Appointment> _appos) {
+            foreach (Appointment _appo in _appos) {
+                string _title;
+                string _desc = null;
+                if (_appo.Title.Length > 10) {
+                    _title = _appo.Title.Substring(0, 10);
+                } else {
+                    _title = _appo.Title;
+                }
+                if (_appo.Description != null) {
+                    if (_appo.Description.Length > 10) {
+                        _desc = _appo.Description.Substring(0, 10);
+                    } else {
+                        _desc = _appo.Description;
+                    }
+                }
+                string h = null;
+                if (_appo.StartDate.Hour < 10) {
+                    h = "0" + _appo.StartDate.Hour;
+                } else {
+                    h = _appo.StartDate.Hour.ToString();
+                }
+
+                //Find control on page.
+                Button chosenButton = (Button)FindControl(_appo.getShortWeekday() + h);
+                if (chosenButton != null) {
+                    if (_desc != null) {
+                        chosenButton.Text = _title + Environment.NewLine + _desc;
+                    } else {
+                        chosenButton.Text = _title;
+                    }
+                    chosenButton.BackColor = Color.FromArgb(255, 248, 242); // Paints the button in a other color to shot that an Appointment is present
+                } else {
+                } 
             }
         }
 
@@ -244,9 +281,10 @@ namespace Wochenplaner {
 
         protected void loginUser(object sender, EventArgs e) {
             userData.Text = overlayTextBoxLogin.Text;
-            if (Session["user"] != null) {
-                ud.Name = overlayTextBoxLogin.Text;
+            if (Session["wpmodel"] != null) {
+                wpm = (WPModel)Session["wpmodel"];
             }
+            wpm.sqlReadUser(overlayTextBoxLogin.Text);
 
             // TODO react when username changes
         }
@@ -264,12 +302,9 @@ namespace Wochenplaner {
         protected void createAppointment(object sender, EventArgs e) {
             if (Session["wpmodel"] != null) {
                 wpm = (WPModel)Session["wpmodel"];
-                if (Session["wpmodel"] != null) {
-                    ud = (UserData)Session["user"];
-                }
                 Appointment appo = null;
 
-                string user = ud.Id;
+                string user = wpm.User.Id;
                 string title = overlayTextBoxSmall.Text;
                 string desc = overlayTextBoxLarge.Text;
 
@@ -284,13 +319,13 @@ namespace Wochenplaner {
                     appo = new Appointment(user, title, desc, startDate, (byte)ddRepeat.SelectedIndex, new DateTime(Convert.ToInt32(textBoxYear.Text), Convert.ToInt32(textBoxMonth.Text), Convert.ToInt32(textBoxDay.Text), _time, 00, 00));
                 } else if (cbRepeat.Checked) {
                     appo = new Appointment(user, title, desc, startDate, (byte)ddRepeat.SelectedIndex, new DateTime(9999, 12, 31));
-                } else if (desc != null) {
+                } else if (desc != "") {
                     appo = new Appointment(user, title, desc, startDate, (byte)6, new DateTime(9999, 12, 31));
                 } else {
                     appo = new Appointment(user, title, null, startDate, (byte)6, new DateTime(9999, 12, 31));
                 }
 
-                wpm.sqlWrite(appo);
+                wpm.sqlWriteAppointments(appo);
                 paintAppointment(appo);
             }
         }

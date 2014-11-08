@@ -22,12 +22,17 @@ namespace Wochenplaner.App_Code {
         public DateTime[] Dates { get { return this.dates; } set { this.dates = value; } }
         private SqlConnection sqlConnection = new SqlConnection(@"Data Source=(LocalDB)\v11.0;AttachDbFilename=D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\App_Data\WP_DataBase.mdf;Integrated Security=True");
         public SqlConnection SqlConnection { get { return this.sqlConnection; } set { this.sqlConnection = value; } }
-        #endregion
-
         /// <summary>
-        /// Linked list of appointments to hold these
+        /// Linked list of appointment objects to hold these
         /// </summary>
-        LinkedList<Appointment> appointmentList;
+        private LinkedList<Appointment> appointmentList;
+        public LinkedList<Appointment> AppointmentList { get { return this.appointmentList; } set { this.appointmentList = value; } }
+        /// <summary>
+        /// user object
+        /// </summary>
+        private UserData user;
+        public UserData User { get { return this.user; } set { this.user = value; }}
+        #endregion
 
         /// <summary>
         /// Constructor for the WP_Model class
@@ -39,6 +44,8 @@ namespace Wochenplaner.App_Code {
             this.week = calculateWeeknumber();
             dates = new DateTime[7];
             updateDates();
+
+            this.user = new UserData();
         }
 
         /// <summary>
@@ -184,7 +191,7 @@ namespace Wochenplaner.App_Code {
         /// <summary>
         /// Writes an Appointment into an sql table
         /// </summary>
-        public void sqlWrite(Appointment _appo) {
+        public void sqlWriteAppointments(Appointment _appo) {
             try {
                 sqlConnection.Open();
                 SqlCommand command = new SqlCommand("INSERT INTO appointments VALUES (@USER, @TITLE, @DESC, @STARTDATE, @ENDDATE, @REPEAT)", sqlConnection);
@@ -207,7 +214,7 @@ namespace Wochenplaner.App_Code {
         /// <summary>
         /// reads an entry from an sql table
         /// </summary>
-        private LinkedList<Appointment> sqlRead(UserData _user) {
+        public void sqlReadAppointments(UserData _user) {
             try {
                 sqlConnection.Open();
                 SqlCommand command = new SqlCommand("SELECT * FROM dbo.Appointments", sqlConnection);
@@ -236,19 +243,69 @@ namespace Wochenplaner.App_Code {
                         }
 
                         appoList.AddLast(appo);
-                        //paintAppointment(appo);
-                        //TODO
                     }
                 }
 
                 reader.Close();
-                return appoList;
+                this.appointmentList = appoList;
 
             } catch (Exception ex) {
                 AppointmentDelegate ad = new AppointmentDelegate();
                 ad.TriggerError += new AppointmentCreateEventHandler(ad.playErrorSound);
                 ad._triggerError();
-                return null;
+            }
+        }
+
+        /// <summary>
+        /// Writes an Appointment into an sql table
+        /// </summary>
+        public void sqlWriteUser(UserData _user) {
+            try {
+                sqlConnection.Open();
+                SqlCommand command = new SqlCommand("INSERT INTO users VALUES (@USER, @NAME, @PASSWORD)", sqlConnection);
+                command.Parameters.AddWithValue("@USER", _user.Id);
+                command.Parameters.AddWithValue("@NAME", _user.Name);
+                command.Parameters.AddWithValue("@PASSWORD", _user.Password);
+
+                command.ExecuteNonQuery();
+
+            } catch (Exception ex) {
+                AppointmentDelegate ad = new AppointmentDelegate();
+                ad.TriggerError += new AppointmentCreateEventHandler(ad.playErrorSound);
+                ad._triggerError();
+            }
+        }
+
+        /// <summary>
+        /// reads an entry from an sql table
+        /// </summary>
+        public void sqlReadUser(string _name) {
+            try {
+                if (sqlConnection != null && sqlConnection.State == System.Data.ConnectionState.Closed) {
+                    sqlConnection.Open();
+                }
+                
+                SqlCommand command = new SqlCommand("SELECT * FROM dbo.Users", sqlConnection);
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read()) {
+                    if (reader.GetString(2) == _name) {
+                        string _id = reader.GetString(1);
+                        string name = reader.GetString(2);
+                        //string pass = reader.GetString(3);
+
+                        user = new UserData(name);
+                        user.Id = _id;
+                        break;
+                    }
+                }
+
+                reader.Close();
+
+            } catch (Exception ex) {
+                AppointmentDelegate ad = new AppointmentDelegate();
+                ad.TriggerError += new AppointmentCreateEventHandler(ad.playErrorSound);
+                ad._triggerError();
             }
         }
 
