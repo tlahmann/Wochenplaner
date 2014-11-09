@@ -453,7 +453,6 @@ Primary use:	MainPage
         margin-left: auto;
         margin-right: auto;
         width: 100%;
-        /*min-width: 850px;*/
     }
 
     /*=== 3.4. Header ===*/
@@ -461,36 +460,31 @@ Primary use:	MainPage
     #header {
         margin: 0px 5px 5px 5px;
         padding: 5px 0px 0px 0px;
-        height: 150px;
+        height: 60px;
         width: auto;
     }
 
     /*=== 3.4.1. Title ===*/
     #title, #subtitle {
-        font-size: 16px;
+        font-size: 12px;
         text-align: left;
         margin: 10px 0px 10px 10px;
     }
 
     #subtitle {
-        font-size: 15px;
+        font-size: 10px;
     }
 
     /*=== 3.4.2. Print ===*/
     #print {
-        text-align: center;
-        float: left;
-        margin: 10px;
-        bottom: 0px;
-        width: 20px;
-        height: 20px;
+        display: none;
     }
 
     /*=== 3.4.3. User Login ===*/
     .user-login-wrapper {
-        font-size: 15px;
+        font-size: 10px;
         float: right;
-        height: 35px;
+        height: 20px;
         width: 250px;
     }
 
@@ -501,13 +495,7 @@ Primary use:	MainPage
     }
 
     .login-button {
-        font-weight: bold;
-        font-size: 12px;
-        border-style: solid;
-        border-width: 2px;
-        margin: 0px 5px;
-        height: 20px;
-        width: 50px;
+        display: none;
     }
 
     /*=== 3.4.4. Navigation ===*/
@@ -521,19 +509,14 @@ Primary use:	MainPage
     }
 
     .navgation-button {
-        font-weight: bold;
-        font-size: 20px;
-        border-style: solid;
-        border-width: 2px;
-        margin: 1px;
-        height: 35px;
-        width: 35px;
+        display: none;
     }
 
     /*=== 3.5. Table ===*/
 
     #TablePlanner {
         height: 100%;
+        width: 100%;
         margin-left: auto;
         margin-right: auto;
         font-weight: bold;
@@ -551,12 +534,12 @@ Primary use:	MainPage
         border-style: dotted;
         border-width: 0px 1px 1px 0px;
         width: 200px;
-        height: 30px;
+        height: 34px;
     }
 
     .head-button, .special-head, .special-head-alternating {
         font-weight: bold;
-        font-size: 11px;
+        font-size: 8px;
         text-transform: uppercase;
         text-align: center;
     }
@@ -572,7 +555,7 @@ Primary use:	MainPage
 
     /*=== 3.5.3. Table Content ===*/
     .appointment-button {
-        font-size: 12px;
+        font-size: 8px;
         border-width: 0px;
         padding: 1px 0px 0px 0px;
         height: 100%;
