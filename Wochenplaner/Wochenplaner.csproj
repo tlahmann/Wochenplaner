@@ -63,6 +63,8 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+    <Content Include="StyleSheets\print.css" />
+    <Content Include="StyleSheets\mobile.css" />
     <Content Include="Wochenplaner-colors.pfi" />
   </ItemGroup>
   <ItemGroup>

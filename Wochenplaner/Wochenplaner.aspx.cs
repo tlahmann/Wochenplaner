@@ -1,15 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Collections.Generic;
+using System.Drawing.Printing;
+using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Web.Configuration;
-using System.Globalization;
-using System.Text.RegularExpressions;
-
 using Wochenplaner.App_Code;
 
 namespace Wochenplaner {
@@ -151,7 +151,7 @@ namespace Wochenplaner {
                     } else {
                         h = j.ToString();
                     }
-                    Button chosenButton = (Button)FindControl(wpm.getShortWeekday(i)+h);
+                    Button chosenButton = (Button)FindControl(wpm.getShortWeekday(i) + h);
                     if (chosenButton != null) {
                         chosenButton.Text = "";
                         chosenButton.BackColor = Color.Transparent;
@@ -287,6 +287,9 @@ namespace Wochenplaner {
             paintDates();
         }
 
+        #endregion
+
+        #region Print
         /// <summary>
         /// Prints the acutally shown calendar view
         /// </summary>
