@@ -31,7 +31,7 @@ namespace Wochenplaner.App_Code {
         /// user object
         /// </summary>
         private UserData user;
-        public UserData User { get { return this.user; } set { this.user = value; }}
+        public UserData User { get { return this.user; } set { this.user = value; } }
         #endregion
 
         /// <summary>
@@ -295,14 +295,17 @@ namespace Wochenplaner.App_Code {
                 if (sqlConnection != null && sqlConnection.State == System.Data.ConnectionState.Closed) {
                     sqlConnection.Open();
                 }
-                
+
                 SqlCommand command = new SqlCommand("SELECT * FROM dbo.Users", sqlConnection);
                 SqlDataReader reader = command.ExecuteReader();
 
+                string _id = null;
+                string name = null;
+
                 while (reader.Read()) {
                     if (reader.GetString(2) == _name) {
-                        string _id = reader.GetString(1);
-                        string name = reader.GetString(2);
+                        _id = reader.GetString(1);
+                        name = reader.GetString(2);
                         //string pass = reader.GetString(3);
 
                         user = new UserData(name);
@@ -312,7 +315,7 @@ namespace Wochenplaner.App_Code {
                 }
 
                 reader.Close();
-                if (user.Name != null) {
+                if (_id != null) {
                     sqlReadAppointments();
                 }
 

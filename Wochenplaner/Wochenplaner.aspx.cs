@@ -142,6 +142,26 @@ namespace Wochenplaner {
             }
         }
 
+        private void resetAppointmentDisplay() {
+            for (int i = 0; i < 7; i++) {
+                for (int j = 7; j < 21; j++) {
+                    string h = null;
+                    if (j < 10) {
+                        h = "0" + j;
+                    } else {
+                        h = j.ToString();
+                    }
+                    Button chosenButton = (Button)FindControl(wpm.getShortWeekday(i)+h);
+                    if (chosenButton != null) {
+                        chosenButton.Text = "";
+                        chosenButton.BackColor = Color.Transparent;
+                    } else {
+                    }
+                }
+            }
+
+        }
+
         /// <summary>
         /// Fades in the overlay for the appointment creation.</summary>
         /// <param name="dateTime">datetime takes a string containing the date and time where to create the
@@ -185,7 +205,7 @@ namespace Wochenplaner {
 
         protected void overlayAppointmentRepresentation(Button _bt, string _day, int _time) {
             DateTime startDate = wpm.Dates[weekdayToInt(_day)].AddHours(_time);
-            if(_bt.Text != ""){
+            if (_bt.Text != "") {
                 wpm.getAppointment(startDate);
                 overlayTextBoxSmall.Text = "";
                 overlayTextBoxLarge.Text = "";
@@ -195,8 +215,7 @@ namespace Wochenplaner {
                 textBoxYear.Text = "";
                 textBoxMonth.Text = "";
                 textBoxDay.Text = "";
-            }
-            else{
+            } else {
                 overlayTextBoxSmall.Text = "";
                 overlayTextBoxLarge.Text = "";
                 cbRepeat.Checked = false;
@@ -314,7 +333,8 @@ namespace Wochenplaner {
                 }
                 wpm.sqlReadUser(overlayTextBoxLogin.Text);
 
-                if (wpm.User.Name == null) {
+                resetAppointmentDisplay();
+                if (wpm.User.Name != overlayTextBoxLogin.Text) {
                     wpm.sqlWriteUser(registerNewUser());
                 } else {
                     paintAppointments();
