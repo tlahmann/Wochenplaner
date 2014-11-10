@@ -10,7 +10,6 @@
     <meta name="keywords" content="Wochenplaner, Terminkalender, Organisation" />
     <meta name="date" content="2014-10-14" />
     <link rel="stylesheet" type="text/css" href="StyleSheets/style.css" />
-    <%--<link rel="stylesheet" type="text/css" href="StyleSheets/print.css" media="print" />--%>
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <title>Wochenplaner v 0.12</title>
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
