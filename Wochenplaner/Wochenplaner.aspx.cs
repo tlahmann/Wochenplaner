@@ -91,12 +91,14 @@ namespace Wochenplaner {
             //Find control on page.
             Button chosenButton = (Button)FindControl(_appo.getShortWeekday() + h);
             if (chosenButton != null) {
-                if (_desc != null) {
-                    chosenButton.Text = _title + Environment.NewLine + _desc;
-                } else {
-                    chosenButton.Text = _title;
+                if (wpm.Dates[( (int)_appo.StartDate.DayOfWeek - 1 )].AddHours(_appo.StartDate.Hour) == _appo.StartDate) {
+                    if (_desc != null) {
+                        chosenButton.Text = _title + Environment.NewLine + _desc;
+                    } else {
+                        chosenButton.Text = _title;
+                    }
+                    chosenButton.BackColor = Color.FromArgb(255, 248, 242); // Paints the button in a other color to show that an Appointment is present
                 }
-                chosenButton.BackColor = Color.FromArgb(255, 248, 242); // Paints the button in a other color to shot that an Appointment is present
             } else {
             }
         }
@@ -131,12 +133,14 @@ namespace Wochenplaner {
                 //Find control on page.
                 Button chosenButton = (Button)FindControl(_appo.getShortWeekday() + h);
                 if (chosenButton != null) {
-                    if (_desc != null) {
-                        chosenButton.Text = _title + Environment.NewLine + _desc;
-                    } else {
-                        chosenButton.Text = _title;
+                    if (wpm.Dates[( (int)_appo.StartDate.DayOfWeek - 1 )].AddHours(_appo.StartDate.Hour) == _appo.StartDate) {
+                        if (_desc != null) {
+                            chosenButton.Text = _title + Environment.NewLine + _desc;
+                        } else {
+                            chosenButton.Text = _title;
+                        }
+                        chosenButton.BackColor = Color.FromArgb(255, 248, 242); // Paints the button in a other color to shot that an Appointment is present
                     }
-                    chosenButton.BackColor = Color.FromArgb(255, 248, 242); // Paints the button in a other color to shot that an Appointment is present
                 } else {
                 }
             }
@@ -167,7 +171,7 @@ namespace Wochenplaner {
         /// <param name="dateTime">datetime takes a string containing the date and time where to create the
         /// appointment</param>
         public void fadeInOverlay(string _day, int _time) {
-            if (Session["wpmodel"] != null) {
+            if (Session["wpmodel"] != null && wpm != null) {
                 wpm = (WPModel)Session["wpmodel"];
             }
             string _t = null;
@@ -296,7 +300,8 @@ namespace Wochenplaner {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         protected void printCalendar(object sender, ImageClickEventArgs e) {
-
+            string scriptTxt = "printPage();";
+            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "PrintScript", scriptTxt, true);
         }
 
         #endregion
@@ -331,7 +336,7 @@ namespace Wochenplaner {
         protected void loginUser(object sender, EventArgs e) {
             if (overlayTextBoxLogin.Text != "") {
                 userData.Text = overlayTextBoxLogin.Text;
-                if (Session["wpmodel"] != null) {
+                if (Session["wpmodel"] != null && wpm != null) {
                     wpm = (WPModel)Session["wpmodel"];
                 }
                 wpm.sqlReadUser(overlayTextBoxLogin.Text);
@@ -360,7 +365,7 @@ namespace Wochenplaner {
         /// <param name="sender">object sender</param>
         /// <param name="e">event e</param>
         protected void createAppointment(object sender, EventArgs e) {
-            if (Session["wpmodel"] != null) {
+            if (Session["wpmodel"] != null && wpm != null) {
                 wpm = (WPModel)Session["wpmodel"];
                 Appointment appo = null;
 

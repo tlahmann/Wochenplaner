@@ -91,5 +91,6 @@ namespace Wochenplaner.App_Code {
         internal string getShortWeekday() {
             return this.startDate.ToString("ddd");
         }
+
     }
 }

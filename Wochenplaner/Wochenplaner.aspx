@@ -8,10 +8,10 @@
     <meta name="description" content="Wochenplaner und Terminkalender der Uni Ulm." />
     <meta name="author" content="Tobias Lahmann" />
     <meta name="keywords" content="Wochenplaner, Terminkalender, Organisation" />
-    <meta name="date" content="2014-10-14" />
+    <meta name="date" content="2014-11-11" />
     <link rel="stylesheet" type="text/css" href="StyleSheets/style.css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <title>Wochenplaner v 0.12</title>
+    <title>Wochenplaner v 0.13</title>
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="Scripts/WP_MainScript.js"></script>
 </head>
