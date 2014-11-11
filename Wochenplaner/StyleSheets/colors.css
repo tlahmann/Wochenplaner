@@ -72,6 +72,10 @@ BODY, H1, H2, H3, H4, H5, H6, .content, .content-alternating {
     color:          #6D929B;
 }
 
+/*.login-button, .navgation-button, .overlay-button {
+    background-color: #CAE8EA;
+}*/
+
 /*=== 3. Border Color ===*/
 
 .login-button, .navgation-button, .overlay-button, #overlay-appointment-check-box-repeating, #overlay-dateTime-dropDown {

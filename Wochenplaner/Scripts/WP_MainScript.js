@@ -2,8 +2,8 @@
 [JavaScript File]
 
 Project:	Wochenplaner
-Version:	1.1
-Last change:	29/10/'14 [fade in login overlay added]
+Version:	1.2
+Last change:	11/11/'14 [function print added]
 Assigned to:	Tobias Lahmann
 Primary use:	MainPage
 -------------------------------------------------------------------*/
@@ -28,4 +28,8 @@ function openLoginOverlay() {
 function closeInputOverlay() {
     var $overlay = $('#overlay-appointment-wrapper');
     $overlay.fadeOut();
+}
+
+window.printPage = function () {
+    window.print();
 }
