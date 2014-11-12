@@ -97,7 +97,10 @@ namespace Wochenplaner {
                     } else {
                         chosenButton.Text = _title;
                     }
-                    chosenButton.BackColor = Color.FromArgb(255, 248, 242); // Paints the button in a other color to show that an Appointment is present
+                    chosenButton.BackColor = Color.Beige; // Paints the button in a other color to shot that an Appointment is present
+                } else {
+                    chosenButton.Text = "";
+                    chosenButton.BackColor = Color.Transparent;
                 }
             } else {
             }
@@ -139,7 +142,10 @@ namespace Wochenplaner {
                         } else {
                             chosenButton.Text = _title;
                         }
-                        chosenButton.BackColor = Color.FromArgb(255, 248, 242); // Paints the button in a other color to shot that an Appointment is present
+                        chosenButton.BackColor = Color.Beige; // Paints the button in a other color to shot that an Appointment is present
+                    } else {
+                        chosenButton.Text = "";
+                        chosenButton.BackColor = Color.Transparent;
                     }
                 } else {
                 }
@@ -209,11 +215,12 @@ namespace Wochenplaner {
 
         protected void overlayAppointmentRepresentation(Button _bt, string _day, int _time) {
             DateTime startDate = wpm.Dates[weekdayToInt(_day)].AddHours(_time);
+            string[] lines = Regex.Split(_bt.Text, "\r\n");
             if (_bt.Text != "") {
-                wpm.getAppointment(startDate);
-                overlayTextBoxSmall.Text = "";
-                overlayTextBoxLarge.Text = "";
-                cbRepeat.Checked = false;
+                Appointment appo = wpm.getAppointment(wpm.User.Id, lines[0], startDate);
+                overlayTextBoxSmall.Text = appo.Title;
+                overlayTextBoxLarge.Text = appo.Description;
+                cbRepeat.Checked = true;
                 ddRepeat.SelectedIndex = 0;
                 cbRepeat.Checked = false;
                 textBoxYear.Text = "";
@@ -272,6 +279,7 @@ namespace Wochenplaner {
             }
             paintWeekNumber(wpm.Week, wpm.Year);
             paintDates();
+            paintAppointments();
         }
 
         /// <summary>
@@ -289,6 +297,7 @@ namespace Wochenplaner {
             }
             paintWeekNumber(wpm.Week, wpm.Year);
             paintDates();
+            paintAppointments();
         }
 
         #endregion

@@ -11,7 +11,7 @@
     <meta name="date" content="2014-11-11" />
     <link rel="stylesheet" type="text/css" href="StyleSheets/style.css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <title>Wochenplaner v 0.13</title>
+    <title>Wochenplaner v 0.14</title>
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="Scripts/WP_MainScript.js"></script>
 </head>

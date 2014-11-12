@@ -74,8 +74,9 @@ namespace Wochenplaner.App_Code {
             }
         }
 
-        internal Appointment getAppointment(DateTime _dt) {
-            appointmentList.Find(new Appointment(null, null, _dt));
+        internal Appointment getAppointment(string _user, string _title, DateTime _dt) {
+            LinkedListNode<Appointment> lln = null;
+                appointmentList.Find(x => x.StartDate.Contains("seat"));
             return null;
         }
 
