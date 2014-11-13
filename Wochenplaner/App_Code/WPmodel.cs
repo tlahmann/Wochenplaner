@@ -74,6 +74,11 @@ namespace Wochenplaner.App_Code {
             }
         }
 
+        /// <summary>
+        /// graps the Appointment from the given DateTime
+        /// </summary>
+        /// <param name="_dt">the dateTime for the appointment search</param>
+        /// <returns>the appointment</returns>
         internal Appointment getAppointment(DateTime _dt) {
             return appointmentList.Find(x => x.StartDate == _dt);
         }
@@ -82,12 +87,10 @@ namespace Wochenplaner.App_Code {
         /// Changes the title of the appointment
         /// </summary>
         /// <param name="_appo">An appointment</param>
-        internal void alterTitle(Appointment _appo, string _title) {
-            if (!this.appointmentList.Contains(_appo)) {
-                //TODO
-                //this.appointmentList.Find(_appo).Value.Title = _title;
-            } else {
-                //throw new ArgumentException("Dieser Termin existiert nicht");
+        internal void alterTitle(string _title, DateTime _dt) {
+            Appointment _appo = this.appointmentList.Find(x => x.StartDate == _dt);
+            if (_appo != null) {
+                _appo.Title = _title;
             }
         }
 
@@ -95,12 +98,10 @@ namespace Wochenplaner.App_Code {
         /// Changes the description of the appointment
         /// </summary>
         /// <param name="_appo">An appointment</param>
-        internal void alterDescription(Appointment _appo, string _desc) {
-            if (!this.appointmentList.Contains(_appo)) {
-                //TODO
-                //this.appointmentList.Find(_appo).Value.Description = _desc;
-            } else {
-                //throw new ArgumentException("Dieser Termin existiert nicht");
+        internal void alterDescription(string _desc, DateTime _dt) {
+            Appointment _appo = this.appointmentList.Find(x => x.StartDate == _dt);
+            if (_appo != null) {
+                _appo.Description = _desc;
             }
         }
 
@@ -134,12 +135,10 @@ namespace Wochenplaner.App_Code {
         /// Changes the repeat-rate of the appointment
         /// </summary>
         /// <param name="_appo">An appointment</param>
-        internal void alterRepeat(Appointment _appo, byte _repeat) {
-            if (!this.appointmentList.Contains(_appo)) {
-                //TODO
-                //this.appointmentList.Find(_appo).Value.Repeat = _repeat;
-            } else {
-                //throw new ArgumentException("Dieser Termin existiert nicht");
+        internal void alterRepeat(byte _repeat, DateTime _dt) {
+            Appointment _appo = this.appointmentList.Find(x => x.StartDate == _dt);
+            if (_appo != null) {
+                _appo.Repeat = _repeat;
             }
         }
 
