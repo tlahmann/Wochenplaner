@@ -179,25 +179,30 @@ namespace Wochenplaner {
 
         protected void overlayAppointmentRepresentation(Button _bt, string _day, int _time) {
             DateTime startDate = wpm.Dates[weekdayToInt(_day)].AddHours(_time);
+            overlayTextBoxSmall.Text = "";
+            overlayTextBoxLarge.Text = "";
+            cbRepeat.Checked = false;
+            ddRepeat.SelectedIndex = 0;
+            cbEnd.Checked = false;
+            textBoxYear.Text = "";
+            textBoxMonth.Text = "";
+            textBoxDay.Text = "";
             if (_bt.Text != "") {
                 Appointment appo = wpm.getAppointment(startDate);
                 overlayTextBoxSmall.Text = appo.Title;
-                overlayTextBoxLarge.Text = appo.Description;
-                cbRepeat.Checked = true;
-                ddRepeat.SelectedIndex = 0;
-                cbRepeat.Checked = false;
-                textBoxYear.Text = "";
-                textBoxMonth.Text = "";
-                textBoxDay.Text = "";
-            } else {
-                overlayTextBoxSmall.Text = "";
-                overlayTextBoxLarge.Text = "";
-                cbRepeat.Checked = false;
-                ddRepeat.SelectedIndex = 0;
-                cbRepeat.Checked = false;
-                textBoxYear.Text = "";
-                textBoxMonth.Text = "";
-                textBoxDay.Text = "";
+                if (appo.Description != "") {
+                    overlayTextBoxLarge.Text = appo.Description;
+                }
+                if (appo.Repeat != 255) {
+                    cbRepeat.Checked = true;
+                    ddRepeat.SelectedIndex = appo.Repeat;
+                }
+                if(appo.EndDate != new DateTime(9999,12, 31,00,00,00)){
+                    cbEnd.Checked = true;
+                    textBoxYear.Text = appo.EndDate.Year.ToString();
+                    textBoxMonth.Text = appo.EndDate.Month.ToString();
+                    textBoxDay.Text = appo.EndDate.Day.ToString();
+                }
             }
         }
 
@@ -357,9 +362,9 @@ namespace Wochenplaner {
                 } else if (cbRepeat.Checked) {
                     appo = new Appointment(user, title, desc, startDate, (byte)ddRepeat.SelectedIndex, new DateTime(9999, 12, 31));
                 } else if (desc != "") {
-                    appo = new Appointment(user, title, desc, startDate, (byte)6, new DateTime(9999, 12, 31));
+                    appo = new Appointment(user, title, desc, startDate, (byte)255, new DateTime(9999, 12, 31));
                 } else {
-                    appo = new Appointment(user, title, null, startDate, (byte)6, new DateTime(9999, 12, 31));
+                    appo = new Appointment(user, title, null, startDate, (byte)255, new DateTime(9999, 12, 31));
                 }
 
                 wpm.sqlWriteAppointments(appo);

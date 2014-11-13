@@ -75,8 +75,7 @@ namespace Wochenplaner.App_Code {
         }
 
         internal Appointment getAppointment(DateTime _dt) {
-            appointmentList.Contains(new Appointment() { StartDate = _dt });
-            return null;
+            return appointmentList.Find(x => x.StartDate == _dt);
         }
 
         /// <summary>
@@ -85,6 +84,7 @@ namespace Wochenplaner.App_Code {
         /// <param name="_appo">An appointment</param>
         internal void alterTitle(Appointment _appo, string _title) {
             if (!this.appointmentList.Contains(_appo)) {
+                //TODO
                 //this.appointmentList.Find(_appo).Value.Title = _title;
             } else {
                 //throw new ArgumentException("Dieser Termin existiert nicht");
@@ -97,7 +97,8 @@ namespace Wochenplaner.App_Code {
         /// <param name="_appo">An appointment</param>
         internal void alterDescription(Appointment _appo, string _desc) {
             if (!this.appointmentList.Contains(_appo)) {
-                this.appointmentList.Find(_appo).Value.Description = _desc;
+                //TODO
+                //this.appointmentList.Find(_appo).Value.Description = _desc;
             } else {
                 //throw new ArgumentException("Dieser Termin existiert nicht");
             }
@@ -109,7 +110,8 @@ namespace Wochenplaner.App_Code {
         /// <param name="_appo">An appointment</param>
         internal void alterStartTime(Appointment _appo, DateTime _startDate) {
             if (!this.appointmentList.Contains(_appo)) {
-                this.appointmentList.Find(_appo).Value.StartDate = _startDate;
+                //TODO
+                //this.appointmentList.Find(_appo).Value.StartDate = _startDate;
             } else {
                 //throw new ArgumentException("Dieser Termin existiert nicht");
             }
@@ -121,7 +123,8 @@ namespace Wochenplaner.App_Code {
         /// <param name="_appo">An appointment</param>
         internal void alterEndTime(Appointment _appo, DateTime _endDate) {
             if (!this.appointmentList.Contains(_appo)) {
-                this.appointmentList.Find(_appo).Value.EndDate = _endDate;
+                //TODO
+                //this.appointmentList.Find(_appo).Value.EndDate = _endDate;
             } else {
                 //throw new ArgumentException("Dieser Termin existiert nicht");
             }
@@ -133,7 +136,8 @@ namespace Wochenplaner.App_Code {
         /// <param name="_appo">An appointment</param>
         internal void alterRepeat(Appointment _appo, byte _repeat) {
             if (!this.appointmentList.Contains(_appo)) {
-                this.appointmentList.Find(_appo).Value.Repeat = _repeat;
+                //TODO
+                //this.appointmentList.Find(_appo).Value.Repeat = _repeat;
             } else {
                 //throw new ArgumentException("Dieser Termin existiert nicht");
             }

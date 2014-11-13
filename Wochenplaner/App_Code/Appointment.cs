@@ -10,6 +10,8 @@ namespace Wochenplaner.App_Code {
         /// <summary>
         /// Declaration of variables
         /// </summary>
+        private int id;
+        public int Id { get; set; }
         private string user;
         public string User { get { return this.user; } set { this.user = value; } }
         private string title;
@@ -98,5 +100,20 @@ namespace Wochenplaner.App_Code {
             return this.startDate.ToString("ddd");
         }
 
+        public override bool Equals(object obj) {
+            if (obj == null) return false;
+            Appointment objAsPart = obj as Appointment;
+            if (objAsPart == null) return false;
+            else return Equals(objAsPart);
+        }
+
+        public override int GetHashCode() {
+            return id;
+        }
+
+        public bool Equals(Appointment other) {
+            if (other == null) return false;
+            return ( this.id.Equals(other.id) );
+        }
     }
 }
