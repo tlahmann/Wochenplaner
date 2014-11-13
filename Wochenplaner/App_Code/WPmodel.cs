@@ -23,10 +23,10 @@ namespace Wochenplaner.App_Code {
         private SqlConnection sqlConnection = new SqlConnection(@"Data Source=(LocalDB)\v11.0;AttachDbFilename=D:\Benutzer\Tobias\Studium\2 Semester\Softwaregrundprojekt\Wochenplaner\Wochenplaner\App_Data\WP_DataBase.mdf;Integrated Security=True");
         public SqlConnection SqlConnection { get { return this.sqlConnection; } set { this.sqlConnection = value; } }
         /// <summary>
-        /// Linked list of appointment objects to hold these
+        ///   list of appointment objects to hold these
         /// </summary>
-        private LinkedList<Appointment> appointmentList;
-        public LinkedList<Appointment> AppointmentList { get { return this.appointmentList; } set { this.appointmentList = value; } }
+        private List<Appointment> appointmentList;
+        public List<Appointment> AppointmentList { get { return this.appointmentList; } set { this.appointmentList = value; } }
         /// <summary>
         /// user object
         /// </summary>
@@ -38,7 +38,7 @@ namespace Wochenplaner.App_Code {
         /// Constructor for the WP_Model class
         /// </summary>
         internal WPModel() {
-            appointmentList = new LinkedList<Appointment>();
+            appointmentList = new List<Appointment>();
             this.year = DateTime.Now.Year;
             this.month = DateTime.Now.Month;
             this.week = calculateWeeknumber();
@@ -49,19 +49,19 @@ namespace Wochenplaner.App_Code {
         }
 
         /// <summary>
-        /// Adds the appointment to the linkedList
+        /// Adds the appointment to the  List
         /// </summary>
         /// <param name="_appo">An appointment</param>
         internal void addAppointment(Appointment _appo) {
             if (!this.appointmentList.Contains(_appo)) {
-                this.appointmentList.AddLast(_appo);
+                this.appointmentList.Add(_appo);
             } else {
                 //throw new ArgumentException("Dieser Termin existiert bereits");
             }
         }
 
         /// <summary>
-        /// Removes the appointment from the linkedList
+        /// Removes the appointment from the  List
         /// </summary>
         /// <param name="_appo">An appointment</param>
         /// <returns>bool if successfull</returns>
@@ -74,9 +74,8 @@ namespace Wochenplaner.App_Code {
             }
         }
 
-        internal Appointment getAppointment(string _user, string _title, DateTime _dt) {
-            LinkedListNode<Appointment> lln = null;
-                appointmentList.Find(x => x.StartDate.Contains("seat"));
+        internal Appointment getAppointment(DateTime _dt) {
+            appointmentList.Contains(new Appointment() { StartDate = _dt });
             return null;
         }
 
@@ -86,7 +85,7 @@ namespace Wochenplaner.App_Code {
         /// <param name="_appo">An appointment</param>
         internal void alterTitle(Appointment _appo, string _title) {
             if (!this.appointmentList.Contains(_appo)) {
-                this.appointmentList.Find(_appo).Value.Title = _title;
+                //this.appointmentList.Find(_appo).Value.Title = _title;
             } else {
                 //throw new ArgumentException("Dieser Termin existiert nicht");
             }
@@ -231,7 +230,7 @@ namespace Wochenplaner.App_Code {
                 SqlDataReader reader = command.ExecuteReader();
 
                 Appointment appo = null;
-                LinkedList<Appointment> appoList = new LinkedList<Appointment>();
+                List<Appointment> appoList = new List<Appointment>();
 
                 while (reader.Read()) {
                     if (reader.GetString(1) == user.Id) {
@@ -252,7 +251,7 @@ namespace Wochenplaner.App_Code {
                             appo = new Appointment(_user, title, startDate);
                         }
 
-                        appoList.AddLast(appo);
+                        appoList.Add(appo);
                     }
                 }
 

@@ -112,43 +112,7 @@ namespace Wochenplaner {
         /// <param name="_appo">An appointment to show</param>
         private void paintAppointments() {
             foreach (Appointment _appo in wpm.AppointmentList) {
-                string _title;
-                string _desc = null;
-                if (_appo.Title.Length > 10) {
-                    _title = _appo.Title.Substring(0, 10);
-                } else {
-                    _title = _appo.Title;
-                }
-                if (_appo.Description != null) {
-                    if (_appo.Description.Length > 10) {
-                        _desc = _appo.Description.Substring(0, 10);
-                    } else {
-                        _desc = _appo.Description;
-                    }
-                }
-                string h = null;
-                if (_appo.StartDate.Hour < 10) {
-                    h = "0" + _appo.StartDate.Hour;
-                } else {
-                    h = _appo.StartDate.Hour.ToString();
-                }
-
-                //Find control on page.
-                Button chosenButton = (Button)FindControl(_appo.getShortWeekday() + h);
-                if (chosenButton != null) {
-                    if (wpm.Dates[( (int)_appo.StartDate.DayOfWeek - 1 )].AddHours(_appo.StartDate.Hour) == _appo.StartDate) {
-                        if (_desc != null) {
-                            chosenButton.Text = _title + Environment.NewLine + _desc;
-                        } else {
-                            chosenButton.Text = _title;
-                        }
-                        chosenButton.BackColor = Color.Beige; // Paints the button in a other color to shot that an Appointment is present
-                    } else {
-                        chosenButton.Text = "";
-                        chosenButton.BackColor = Color.Transparent;
-                    }
-                } else {
-                }
+                paintAppointment(_appo);
             }
         }
 
@@ -215,9 +179,8 @@ namespace Wochenplaner {
 
         protected void overlayAppointmentRepresentation(Button _bt, string _day, int _time) {
             DateTime startDate = wpm.Dates[weekdayToInt(_day)].AddHours(_time);
-            string[] lines = Regex.Split(_bt.Text, "\r\n");
             if (_bt.Text != "") {
-                Appointment appo = wpm.getAppointment(wpm.User.Id, lines[0], startDate);
+                Appointment appo = wpm.getAppointment(startDate);
                 overlayTextBoxSmall.Text = appo.Title;
                 overlayTextBoxLarge.Text = appo.Description;
                 cbRepeat.Checked = true;

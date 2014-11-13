@@ -5,7 +5,7 @@ using System.Web;
 using System.Globalization;
 
 namespace Wochenplaner.App_Code {
-    public class Appointment {
+    public class Appointment: IEquatable<Appointment> {
         #region Variables
         /// <summary>
         /// Declaration of variables
@@ -23,6 +23,12 @@ namespace Wochenplaner.App_Code {
         private byte repeat;
         public byte Repeat { get { return this.repeat; } set { this.repeat = value; } }
         #endregion
+
+        /// <summary>
+        /// Constructor for 0 variables
+        /// </summary>
+        internal Appointment() {
+        }
 
         /// <summary>
         /// Constructor for 3 variables
