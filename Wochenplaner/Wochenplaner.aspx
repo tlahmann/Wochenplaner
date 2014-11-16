@@ -25,7 +25,7 @@
             <div>
                 <asp:Label ID="subtitle" runat="server" Text="Kalenderwoche"></asp:Label>
             </div>
-            <asp:ImageButton ID="print" runat="server" ImageUrl="printer.png" OnClick="printCalendar"/>
+            <asp:ImageButton ID="print" runat="server" ImageUrl="printer.png" OnClick="printCalendar" />
             <div class="navigation">
                 <asp:Button ID="btnBkwd" CssClass="navgation-button" runat="server" Text="<" OnClick="moveWeekBackwards"></asp:Button>
                 <asp:Button ID="btnFwrd" CssClass="navgation-button" runat="server" Text=">" OnClick="moveWeekForwards"></asp:Button>
@@ -40,7 +40,6 @@
                 </div>
             </div>
         </div>
-
 
         <asp:Table ID="TablePlanner" runat="server" OnDataBinding="openOverlay">
             <asp:TableRow runat="server">
@@ -494,8 +493,8 @@
                     </asp:TableRow>
                 </asp:Table>
                 <div class="overlay-appointment-button-wrapper">
-                    <asp:Button ID="buttonOK" OnClick="createAppointment" CssClass="overlay-button" runat="server" Text="Okay"></asp:Button>
-                    <asp:Button ID="buttonMove" OnClick="moveAppointment" CssClass="overlay-button" runat="server" Text="Verschieben"></asp:Button>
+                    <asp:Button ID="buttonOK" OnClick="createAppointmentClick" CssClass="overlay-button" runat="server" Text="Okay"></asp:Button>
+                    <asp:Button ID="buttonMove" OnClick="moveAppointmentOverlay" CssClass="overlay-button" runat="server" Text="Verschieben"></asp:Button>
                     <asp:Button ID="buttonErase" OnClick="deleteAppointment" CssClass="overlay-button" runat="server" Text="Löschen"></asp:Button>
                     <asp:Button ID="buttonClose" OnClick="closeOverlay" CssClass="overlay-button" runat="server" Text="Schließen"></asp:Button>
                 </div>
@@ -504,7 +503,7 @@
 
         <div id="overlay-dateTime-wrapper">
             <div class="overlay-dateTime">
-                <asp:Calendar ID="Calendar" runat="server" BackColor="White" BorderColor="White" BorderWidth="1px" Font-Names="Verdana" Font-Size="9pt" ForeColor="Black" Height="190px" NextPrevFormat="FullMonth" Width="390px">
+                <asp:Calendar ID="Calendar" runat="server" BackColor="White" BorderColor="White" BorderWidth="1px" Font-Names="Verdana" Font-Size="9pt" ForeColor="Black" Height="190px" NextPrevFormat="FullMonth" Width="390px" OnSelectionChanged="moveAppointment">
                     <DayHeaderStyle Font-Bold="True" Font-Size="8pt" />
                     <NextPrevStyle Font-Bold="True" Font-Size="8pt" ForeColor="#333333" VerticalAlign="Bottom" />
                     <OtherMonthDayStyle ForeColor="#999999" />
@@ -514,6 +513,7 @@
                 </asp:Calendar>
                 <div>
                     <asp:DropDownList ID="ddTimePicker" CssClass="overlay-dateTime-dropDown" runat="server">
+                        <asp:ListItem Value="00">Bitte Wählen</asp:ListItem>
                         <asp:ListItem Value="07">07:00</asp:ListItem>
                         <asp:ListItem Value="08">08:00</asp:ListItem>
                         <asp:ListItem Value="09">09:00</asp:ListItem>
@@ -531,7 +531,7 @@
                         <asp:ListItem Value="21">21:00</asp:ListItem>
                     </asp:DropDownList>
                     <div class="overlay-dateTime-button-wrapper">
-                        <asp:Button ID="buttonDateOkay" CssClass="overlay-button" runat="server" Text="Okay"></asp:Button>
+                        <asp:Button ID="buttonDateOkay" CssClass="overlay-button" runat="server" Text="Okay" OnClick="moveAppointment"></asp:Button>
                         <asp:Button ID="buttonDateCancel" CssClass="overlay-button" runat="server" Text="Abbrechen"></asp:Button>
                     </div>
                 </div>
@@ -552,7 +552,7 @@
                 </div>
             </div>
         </div>
-    
+
     </form>
 </body>
 </html>

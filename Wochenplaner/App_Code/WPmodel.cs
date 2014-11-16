@@ -105,13 +105,12 @@ namespace Wochenplaner.App_Code {
         /// <summary>
         /// Changes the starttime of the appointment
         /// </summary>
-        /// <param name="_appo">An appointment</param>
-        internal void alterStartTime(Appointment _appo, DateTime _startDate) {
-            if (!this.appointmentList.Contains(_appo)) {
-                //TODO
-                //this.appointmentList.Find(_appo).Value.StartDate = _startDate;
-            } else {
-                //throw new ArgumentException("Dieser Termin existiert nicht");
+        /// <param name="_startDate">the new startdate</param>
+        /// <param name="_dt">the old startdate</param>
+        internal void alterStartTime(DateTime _startDate, DateTime _dt) {
+            Appointment _appo = this.appointmentList.Find(x => x.StartDate == _dt);
+            if (_appo != null) {
+                _appo.StartDate = _startDate;
             }
         }
 
@@ -287,7 +286,7 @@ namespace Wochenplaner.App_Code {
                 ad._triggerError();
             }
         }
-        
+
         /// <summary>
         /// Writes an user into an sql table
         /// </summary>

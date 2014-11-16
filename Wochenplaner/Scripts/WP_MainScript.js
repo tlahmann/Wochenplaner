@@ -30,6 +30,10 @@ function closeInputOverlay() {
     $overlay.fadeOut();
 }
 
+//$("Calendar").click(function (event) {
+//    event.preventDefault();
+//});
+
 window.printPage = function () {
     window.print();
 }
