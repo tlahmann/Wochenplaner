@@ -65,12 +65,9 @@ namespace Wochenplaner.App_Code {
         /// </summary>
         /// <param name="_appo">An appointment</param>
         /// <returns>bool if successfull</returns>
-        internal bool removeAppointment(DateTime _dt) {
-            if (!this.appointmentList.Contains(getAppointment(_dt))) {
-                return this.appointmentList.Remove(getAppointment(_dt));
-            } else {
-                return false;
-                //throw new ArgumentException("Dieser Termin existiert nicht");
+        internal void removeAppointment(DateTime _dt) {
+            if (this.appointmentList.Contains(getAppointment(_dt))) {
+                this.appointmentList.Remove(getAppointment(_dt));
             }
         }
 
@@ -197,6 +194,7 @@ namespace Wochenplaner.App_Code {
         }
 
         #region SQL
+
         /// <summary>
         /// Writes an Appointment into an sql table
         /// </summary>
@@ -269,6 +267,27 @@ namespace Wochenplaner.App_Code {
             }
         }
 
+        /// <summary>
+        /// Deletes an Appointment from an sql table
+        /// </summary>
+        public void sqlDeleteAppointment(DateTime _dt) {
+            try {
+                if (sqlConnection != null && sqlConnection.State == System.Data.ConnectionState.Closed) {
+                    sqlConnection.Open();
+                }
+
+                SqlCommand command = new SqlCommand("DELETE FROM Appointments WHERE startDate = @STARTDATE", sqlConnection);
+                command.Parameters.AddWithValue("@STARTDATE", _dt);
+
+                command.ExecuteNonQuery();
+
+            } catch (Exception ex) {
+                AppointmentDelegate ad = new AppointmentDelegate();
+                ad.TriggerError += new AppointmentCreateEventHandler(ad.playErrorSound);
+                ad._triggerError();
+            }
+        }
+        
         /// <summary>
         /// Writes an user into an sql table
         /// </summary>

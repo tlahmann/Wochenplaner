@@ -91,7 +91,11 @@ namespace Wochenplaner {
             //Find control on page.
             Button chosenButton = (Button)FindControl(_appo.getShortWeekday() + h);
             if (chosenButton != null) {
-                if (wpm.Dates[( (int)_appo.StartDate.DayOfWeek - 1 )].AddHours(_appo.StartDate.Hour) == _appo.StartDate) {
+                int d = ( (int)_appo.StartDate.DayOfWeek - 1 );
+                if (d < 0) {
+                    d = 6;
+                }
+                if (wpm.Dates[d].AddHours(_appo.StartDate.Hour) == _appo.StartDate) {
                     if (_desc != null) {
                         chosenButton.Text = _title + Environment.NewLine + _desc;
                     } else {
@@ -414,6 +418,8 @@ namespace Wochenplaner {
             DateTime startDate = wpm.Dates[weekdayToInt(_day)].AddHours(_time);
 
             wpm.removeAppointment(startDate);
+            wpm.sqlDeleteAppointment(startDate);
+            paintAppointments();
         }
 
         #endregion
