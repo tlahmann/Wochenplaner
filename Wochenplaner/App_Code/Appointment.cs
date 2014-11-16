@@ -100,6 +100,11 @@ namespace Wochenplaner.App_Code {
             return this.startDate.ToString("ddd");
         }
 
+        /// <summary>
+        /// Equals-Method "IEquatable"
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj) {
             if (obj == null) return false;
             Appointment objAsPart = obj as Appointment;
@@ -107,13 +112,23 @@ namespace Wochenplaner.App_Code {
             else return Equals(objAsPart);
         }
 
+        /// <summary>
+        /// GetHashCode-Method "IEquatable"
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode() {
             return id;
         }
 
+        /// <summary>
+        /// Equals-Method "IEquatable"
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(Appointment other) {
             if (other == null) return false;
             return ( this.id.Equals(other.id) );
         }
+    
     }
 }

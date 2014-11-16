@@ -116,6 +116,9 @@ namespace Wochenplaner {
             }
         }
 
+        /// <summary>
+        /// Resets the Buttons to clear the text shown
+        /// </summary>
         private void resetAppointmentDisplay() {
             for (int i = 0; i < 7; i++) {
                 for (int j = 7; j < 21; j++) {
@@ -177,6 +180,12 @@ namespace Wochenplaner {
             //TODO?
         }
 
+        /// <summary>
+        /// when the overlay is opened sets the textbox if an button is opened with an existing appointment
+        /// </summary>
+        /// <param name="_bt">chosen button</param>
+        /// <param name="_day">date-string to choose the appointment to display</param>
+        /// <param name="_time">time-string to choose the appointment to display</param>
         protected void overlayAppointmentRepresentation(Button _bt, string _day, int _time) {
             DateTime startDate = wpm.Dates[weekdayToInt(_day)].AddHours(_time);
             overlayTextBoxSmall.Text = "";
@@ -310,6 +319,11 @@ namespace Wochenplaner {
             ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "OverlayScript", scriptTxt, true);
         }
 
+        /// <summary>
+        /// Reacts to the Button Click "okay" on the login-overlay
+        /// </summary>
+        /// <param name="sender">object sender</param>
+        /// <param name="e">event e</param>
         protected void loginUser(object sender, EventArgs e) {
             if (overlayTextBoxLogin.Text != "") {
                 userData.Text = overlayTextBoxLogin.Text;
@@ -327,6 +341,10 @@ namespace Wochenplaner {
             }
         }
 
+        /// <summary>
+        /// creates new random user
+        /// </summary>
+        /// <returns>a new random user string</returns>
         protected UserData registerNewUser() {
             return new UserData(overlayTextBoxLogin.Text);
         }
@@ -388,7 +406,14 @@ namespace Wochenplaner {
         /// <param name="sender">object sender</param>
         /// <param name="e">event e</param>
         protected void deleteAppointment(object sender, EventArgs e) {
+            string cd = Regex.Match(overlayChoosenDate.Text, @"\(([^)]*)\)").Groups[1].Value;
+            int mid = cd.Length / 2;
+            string _day = cd.Substring(0, mid);
+            int _time = Convert.ToInt32(cd.Substring(mid, mid));
 
+            DateTime startDate = wpm.Dates[weekdayToInt(_day)].AddHours(_time);
+
+            wpm.removeAppointment(startDate);
         }
 
         #endregion

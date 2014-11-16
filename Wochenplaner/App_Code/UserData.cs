@@ -42,8 +42,8 @@ namespace Wochenplaner.App_Code {
         /// <param name="_name">The name of the user</param>
         /// <param name="_pass">The password from the user</param>
         [Obsolete("Full login is not intended at this moment")]
-        public UserData(string _id, string _name, string _pass) {
-            this.id = _id;
+        public UserData(string _name, string _pass) {
+            this.id = createUserId();
             this.name = _name;
             this.password = _pass;
         }
@@ -61,5 +61,6 @@ namespace Wochenplaner.App_Code {
                           .ToArray());
             return result;
         }
+    
     }
 }

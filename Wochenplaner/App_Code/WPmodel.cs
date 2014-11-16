@@ -65,9 +65,9 @@ namespace Wochenplaner.App_Code {
         /// </summary>
         /// <param name="_appo">An appointment</param>
         /// <returns>bool if successfull</returns>
-        internal bool removeAppointment(Appointment _appo) {
-            if (!this.appointmentList.Contains(_appo)) {
-                return this.appointmentList.Remove(_appo);
+        internal bool removeAppointment(DateTime _dt) {
+            if (!this.appointmentList.Contains(getAppointment(_dt))) {
+                return this.appointmentList.Remove(getAppointment(_dt));
             } else {
                 return false;
                 //throw new ArgumentException("Dieser Termin existiert nicht");
@@ -196,6 +196,7 @@ namespace Wochenplaner.App_Code {
             return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         }
 
+        #region SQL
         /// <summary>
         /// Writes an Appointment into an sql table
         /// </summary>
@@ -328,6 +329,7 @@ namespace Wochenplaner.App_Code {
                 ad._triggerError();
             }
         }
+        #endregion
 
     }
 }
