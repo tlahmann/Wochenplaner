@@ -20,8 +20,9 @@ namespace Wochenplaner.App_Code {
         public string Description { get { return this.description; } set { this.description = value; } }
         private DateTime startDate;
         public DateTime StartDate { get { return this.startDate; } set { this.startDate = value; } }
-        private DateTime endDate;
-        public DateTime EndDate { get { return this.endDate; } set { this.endDate = value; } }
+        // TODO enddate
+        //private DateTime endDate;
+        //public DateTime EndDate { get { return this.endDate; } set { this.endDate = value; } }
         private byte repeat;
         public byte Repeat { get { return this.repeat; } set { this.repeat = value; } }
         #endregion
@@ -83,13 +84,14 @@ namespace Wochenplaner.App_Code {
         /// <param name="_startDate">The start dateTime-String of the appointment</param>
         /// <param name="_repeat">The byte to demetmine the repeat-ratio of the appointment</param>
         /// <param name="_endDate">The end dateTime-String of the appointment</param>
+        [Obsolete("EndDate not intended to be used anymore")]
         internal Appointment(string _user, string _title, string _desc, DateTime _startDate, byte _repeat, DateTime _endDate) {
             this.user = _user;
             this.title = _title;
             this.description = _desc;
             this.startDate = _startDate;
             this.repeat = _repeat;
-            this.endDate = _endDate;
+            //this.endDate = _endDate;
         }
 
         /// <summary>

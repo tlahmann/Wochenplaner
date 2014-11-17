@@ -91,6 +91,7 @@ namespace Wochenplaner {
 
                 //Find control on page.
                 Button chosenButton = (Button)FindControl(_appo.getShortWeekday() + h);
+                string bno = chosenButton.ID;
                 if (chosenButton != null) {
                     int d = ( (int)_appo.StartDate.DayOfWeek - 1 );
                     if (d < 0) {
@@ -104,8 +105,8 @@ namespace Wochenplaner {
                         }
                         chosenButton.BackColor = Color.Beige; // Paints the button in a other color to shot that an Appointment is present
                     } else {
-                        chosenButton.Text = "";
-                        chosenButton.BackColor = Color.Transparent;
+                        //chosenButton.Text = "";
+                        //chosenButton.BackColor = Color.Transparent;
                     }
                 } else {
                 }
@@ -198,10 +199,11 @@ namespace Wochenplaner {
             overlayTextBoxLarge.Text = "";
             cbRepeat.Checked = false;
             ddRepeat.SelectedIndex = 0;
-            cbEnd.Checked = false;
-            textBoxYear.Text = "";
-            textBoxMonth.Text = "";
-            textBoxDay.Text = "";
+            // TODO enddate
+            //cbEnd.Checked = false;
+            //textBoxYear.Text = "";
+            //textBoxMonth.Text = "";
+            //textBoxDay.Text = "";
             if (_bt.Text != "") {
                 Appointment appo = wpm.getAppointment(startDate);
                 overlayTextBoxSmall.Text = appo.Title;
@@ -212,12 +214,13 @@ namespace Wochenplaner {
                     cbRepeat.Checked = true;
                     ddRepeat.SelectedIndex = appo.Repeat;
                 }
-                if (appo.EndDate != new DateTime(9999, 12, 31, 00, 00, 00)) {
-                    cbEnd.Checked = true;
-                    textBoxYear.Text = appo.EndDate.Year.ToString();
-                    textBoxMonth.Text = appo.EndDate.Month.ToString();
-                    textBoxDay.Text = appo.EndDate.Day.ToString();
-                }
+                // TODO enddate
+                //if (appo.EndDate != new DateTime(9999, 12, 31, 00, 00, 00)) {
+                //    cbEnd.Checked = true;
+                //    textBoxYear.Text = appo.EndDate.Year.ToString();
+                //    textBoxMonth.Text = appo.EndDate.Month.ToString();
+                //    textBoxDay.Text = appo.EndDate.Day.ToString();
+                //}
             }
         }
 
@@ -368,7 +371,56 @@ namespace Wochenplaner {
         /// <param name="sender">object sender</param>
         /// <param name="e">event e</param>
         protected void createAppointmentClick(object sender, EventArgs e) {
-            crateAppointment(new DateTime(1970, 1, 1, 0, 0, 0));
+            string cd = Regex.Match(overlayChoosenDate.Text, @"\(([^)]*)\)").Groups[1].Value;
+            int mid = cd.Length / 2;
+            string _day = cd.Substring(0, mid);
+            int _time = Convert.ToInt32(cd.Substring(mid, mid));
+
+            DateTime startDate = wpm.Dates[weekdayToInt(_day)].AddHours(_time);
+
+            int repeat = 1;
+            int c = ddRepeat.SelectedIndex;
+
+            if (cbRepeat.Checked) {
+                switch (c) {
+                    case 0:
+                        for (int i = 0; i < 50; i++) {
+                            crateAppointment(startDate.AddDays(i));
+                        }
+                        break;
+                    case 1:
+                        for (int i = 0; i < 50; i++) {
+                            crateAppointment(startDate.AddDays(i));
+                        }
+                        break;
+                    case 2:
+                        for (int i = 0; i < 196; i += 7) {
+                            crateAppointment(startDate.AddDays(i));
+                        }
+                        break;
+                    case 3:
+                        for (int i = 0; i < 280; i += 14) {
+                            crateAppointment(startDate.AddDays(i));
+                        }
+                        break;
+                    case 4:
+                        for (int i = 0; i < 12; i++) {
+                            crateAppointment(startDate.AddMonths(i));
+                        }
+                        break;
+                    case 5:
+                        for (int i = 0; i < 3; i++) {
+                            crateAppointment(startDate.AddYears(i));
+                        }
+                        break;
+                    default:
+                        repeat = 1;
+                        break;
+                }
+            } else {
+                crateAppointment(startDate);
+            }
+
         }
 
         private void crateAppointment(DateTime _startDate) {
@@ -380,47 +432,39 @@ namespace Wochenplaner {
                 string title = overlayTextBoxSmall.Text;
                 string desc = overlayTextBoxLarge.Text;
 
-                string cd = Regex.Match(overlayChoosenDate.Text, @"\(([^)]*)\)").Groups[1].Value;
-                int mid = cd.Length / 2;
-                string _day = cd.Substring(0, mid);
-                int _time = Convert.ToInt32(cd.Substring(mid, mid));
-
-                DateTime startDate = wpm.Dates[weekdayToInt(_day)].AddHours(_time);
-
-                //if (_startDate.Hour < 7) {
-                //    _startDate.AddHours(startDate.Hour);
-                //}
-
-                Appointment _appo = wpm.getAppointment(startDate);
+                Appointment _appo = wpm.getAppointment(_startDate);
                 if (_appo == null) {
-                    if (cbEnd.Checked) {
-                        appo = new Appointment(user, title, desc, startDate, (byte)ddRepeat.SelectedIndex, new DateTime(Convert.ToInt32(textBoxYear.Text), Convert.ToInt32(textBoxMonth.Text), Convert.ToInt32(textBoxDay.Text), _time, 00, 00));
-                    } else if (cbRepeat.Checked) {
-                        appo = new Appointment(user, title, desc, startDate, (byte)ddRepeat.SelectedIndex, new DateTime(9999, 12, 31));
+                    // TODO enddate
+                    //if (cbEnd.Checked) {
+                    //    appo = new Appointment(user, title, desc, startDate, (byte)ddRepeat.SelectedIndex, new DateTime(Convert.ToInt32(textBoxYear.Text), Convert.ToInt32(textBoxMonth.Text), Convert.ToInt32(textBoxDay.Text), _time, 00, 00));
+                    //} else 
+                    if (cbRepeat.Checked) {
+                        appo = new Appointment(user, title, desc, _startDate, (byte)ddRepeat.SelectedIndex, new DateTime(9999, 12, 31));
                     } else if (desc != "") {
-                        appo = new Appointment(user, title, desc, startDate, (byte)255, new DateTime(9999, 12, 31));
+                        appo = new Appointment(user, title, desc, _startDate, (byte)255, new DateTime(9999, 12, 31));
                     } else {
-                        appo = new Appointment(user, title, "", startDate, (byte)255, new DateTime(9999, 12, 31));
+                        appo = new Appointment(user, title, "", _startDate, (byte)255, new DateTime(9999, 12, 31));
                     }
                 } else {
                     if (_appo.Title != title) {
-                        wpm.alterTitle(title, startDate);
+                        wpm.alterTitle(title, _startDate);
                     }
                     if (_appo.Description != desc) {
-                        wpm.alterDescription(desc, startDate);
+                        wpm.alterDescription(desc, _startDate);
                     }
                     //if (_startDate != startDate) {
                     //    wpm.alterStartTime(_startDate, startDate);
                     //}
                     if (_appo.Repeat != ddRepeat.SelectedIndex) {
-                        wpm.alterRepeat((byte)ddRepeat.SelectedIndex, startDate);
+                        wpm.alterRepeat((byte)ddRepeat.SelectedIndex, _startDate);
                     }
                 }
 
                 if (appo != null) {
                     wpm.sqlWriteAppointments(appo);
+                    wpm.addAppointment(appo, _startDate);
                 } else {
-                    wpm.sqlDeleteAppointment(startDate);
+                    wpm.sqlDeleteAppointment(_startDate);
                     wpm.sqlWriteAppointments(_appo);
                 }
                 paintAppointment(appo);

@@ -11,7 +11,7 @@
     <meta name="date" content="2014-11-11" />
     <link rel="stylesheet" type="text/css" href="StyleSheets/style.css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <title>Wochenplaner v 0.16</title>
+    <title>Wochenplaner v 0.17</title>
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="Scripts/WP_MainScript.js"></script>
 </head>
@@ -461,7 +461,7 @@
                             </asp:DropDownList>
                         </asp:TableCell>
                     </asp:TableRow>
-                    <asp:TableRow runat="server">
+                    <%--<asp:TableRow runat="server">
                         <asp:TableCell runat="server">
                             <asp:CheckBox ID="cbEnd" CssClass="overlay-appointment-check-box-repeating" runat="server" Text="Endet" />
                         </asp:TableCell>
@@ -490,7 +490,7 @@
                                 </div>
                             </div>
                         </asp:TableCell>
-                    </asp:TableRow>
+                    </asp:TableRow>--%>
                 </asp:Table>
                 <div class="overlay-appointment-button-wrapper">
                     <asp:Button ID="buttonOK" OnClick="createAppointmentClick" CssClass="overlay-button" runat="server" Text="Okay"></asp:Button>

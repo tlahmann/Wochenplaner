@@ -52,8 +52,8 @@ namespace Wochenplaner.App_Code {
         /// Adds the appointment to the  List
         /// </summary>
         /// <param name="_appo">An appointment</param>
-        internal void addAppointment(Appointment _appo) {
-            if (!this.appointmentList.Contains(_appo)) {
+        internal void addAppointment(Appointment _appo, DateTime _dt) {
+            if (!this.appointmentList.Contains(getAppointment(_dt))) {
                 this.appointmentList.Add(_appo);
             } else {
                 //throw new ArgumentException("Dieser Termin existiert bereits");
@@ -208,7 +208,8 @@ namespace Wochenplaner.App_Code {
                 command.Parameters.AddWithValue("@DESC", _appo.Description);
                 command.Parameters.AddWithValue("@STARTDATE", _appo.StartDate);
                 command.Parameters.AddWithValue("@REPEAT", _appo.Repeat);
-                command.Parameters.AddWithValue("@ENDDATE", _appo.EndDate);
+                // TODO enddate
+                command.Parameters.AddWithValue("@ENDDATE", new DateTime(2099,12,31));
 
                 command.ExecuteNonQuery();
 
