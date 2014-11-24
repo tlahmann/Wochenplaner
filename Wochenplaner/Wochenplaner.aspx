@@ -11,7 +11,7 @@
     <meta name="date" content="2014-11-11" />
     <link rel="stylesheet" type="text/css" href="StyleSheets/style.css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <title>Wochenplaner v 0.17</title>
+    <title>Wochenplaner v 0.18</title>
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="Scripts/WP_MainScript.js"></script>
 </head>
@@ -494,7 +494,7 @@
                 </asp:Table>
                 <div class="overlay-appointment-button-wrapper">
                     <asp:Button ID="buttonOK" OnClick="createAppointmentClick" CssClass="overlay-button" runat="server" Text="Okay"></asp:Button>
-                    <asp:Button ID="buttonMove" OnClick="moveAppointmentOverlay" CssClass="overlay-button" runat="server" Text="Verschieben"></asp:Button>
+                    <%--<asp:Button ID="buttonMove" OnClick="moveAppointmentOverlay" CssClass="overlay-button" runat="server" Text="Verschieben"></asp:Button>--%>
                     <asp:Button ID="buttonErase" OnClick="deleteAppointment" CssClass="overlay-button" runat="server" Text="Löschen"></asp:Button>
                     <asp:Button ID="buttonClose" OnClick="closeOverlay" CssClass="overlay-button" runat="server" Text="Schließen"></asp:Button>
                 </div>

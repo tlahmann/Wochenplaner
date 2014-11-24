@@ -67,7 +67,7 @@ namespace Wochenplaner.App_Code {
         /// <returns>bool if successfull</returns>
         internal void removeAppointment(DateTime _dt) {
             if (this.appointmentList.Contains(getAppointment(_dt))) {
-                this.appointmentList.Remove(getAppointment(_dt));
+                this.appointmentList.Remove(new Appointment() { StartDate = _dt });
             }
         }
 

@@ -128,9 +128,9 @@ namespace Wochenplaner.App_Code {
         /// <param name="other"></param>
         /// <returns></returns>
         public bool Equals(Appointment other) {
-            if (other == null) return false;
-            return ( this.id.Equals(other.id) );
+            if (other == null) { return false; }
+            return ( this.startDate.Equals(other.startDate) );
         }
-    
+
     }
 }

@@ -26,11 +26,11 @@ namespace Wochenplaner {
                 paintAppointments();
             }
 
-
-            paintWeekNumber(wpm.Week, wpm.Year);
-            paintDates();
-
-            disableButtonsOnPageLoad();
+            if (!this.IsPostBack) {
+                paintWeekNumber(wpm.Week, wpm.Year);
+                paintDates();
+                disableButtonsOnPageLoad();
+            }
         }
 
         #region Design
@@ -378,7 +378,6 @@ namespace Wochenplaner {
 
             DateTime startDate = wpm.Dates[weekdayToInt(_day)].AddHours(_time);
 
-            int repeat = 1;
             int c = ddRepeat.SelectedIndex;
 
             if (cbRepeat.Checked) {
@@ -414,7 +413,6 @@ namespace Wochenplaner {
                         }
                         break;
                     default:
-                        repeat = 1;
                         break;
                 }
             } else {
